@@ -18,7 +18,7 @@ CREATE TABLE  IF NOT EXISTS  businesses
   name VARCHAR(500) NOT NULL,
   primaryImage VARCHAR(500) NOT NULL,
    description TEXT NOT NULL,
-  cuisine VARCHAR(100) NOT NULL,
+  cuisine VARCHAR(100)  NULL,
   lat DECIMAL (10,7) NOT NULL,
   lng DECIMAL(10,7) NOT NULL,
   business_type VARCHAR(100) NOT NULL,
@@ -30,7 +30,6 @@ CREATE TABLE  IF NOT EXISTS  businesses
   smokingArea  BOOLEAN,
   FOREIGN KEY(user_id)REFERENCES users(id)
 );
-
 
 
 CREATE TABLE  IF NOT EXISTS  images
@@ -65,13 +64,25 @@ INSERT INTO businesses(user_id,name,primaryImage,description,cuisine,lat,lng,bus
 (1,'Al Shawarma','https://www.ahstatic.com/photos/5555_rsr001_01_p_1024x768.jpg',
 'The best shwarma wrapper in town, for shwarma lovers, amazing quality and people',
 'east food',32.794044,34.989571,'resturant','052386777','nazerth','alswarma@gmail.com',
-'true','true','true');
+'true','true','true'),
+(2,'Jamies Flafel','https://webbox.imgix.net/images/kifsqlsyyrpwrthq/66a8ab43-857c-4d8f-96c0-3c348fa4c2ab.jpg?auto=format,compress&fit=crop&crop=entropy',
+'Enjoy your flafel in a fine dining senario, with the chef Jamie special spicy sauce',
+'jews food',35.23242 , 34.989571,'resturant','0523334446','haifa','jamie@gmail.com','true','true','false');
 
 INSERT INTO images (business_id,image_url) VALUES
-(1,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP6rX2JulNFa3rlswp0WBQYoquLy9vVmKgvPLLACkGlLyHCBwA&s');
+(1,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP6rX2JulNFa3rlswp0WBQYoquLy9vVmKgvPLLACkGlLyHCBwA&s'),
+(2,'https://media-cdn.tripadvisor.com/media/photo-s/14/aa/d0/23/front-door.jpg'),
+(1,'https://media-cdn.tripadvisor.com/media/photo-s/15/25/ce/22/street-food-cafe-possonium.jpg'),
+(1,'https://thumbs.dreamstime.com/z/arabian-street-food-cafe-tel-aviv-israel-april-new-sarona-market-72223046.jpg'),
+(1,'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTMg8C9-uWmP3Umylhe3lxgxz02st1DifrZqgsLf7fGslRNk_7j');
 
-INSERT INTO reviews (user_id,business_id,rating,review_body) VALUES (2,1,7,'Come enjoy some dank vaping 420 blaze it');
 
-COMMIT;
+INSERT INTO reviews (user_id,business_id,rating,review_body) VALUES
+ (2,1,5,'Come enjoy some dank vaping 420 blaze it'),
+ (2,1,3,'very good place'),
+ (2,1,1,'come here'),
+ (1,1,3,'lovely boobs');
+
+ COMMIT;
 
 
