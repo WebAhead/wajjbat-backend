@@ -1,26 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getbusinesses } = require("../queries/getbusinesses");
+const { businesses, businessesId, newReview } = require("../controllers/api");
 
-router.get("/businesses", (req, res) => {
-  getbusinesses()
-    .then(result => res.json(result.rows[0]))
-    .catch(err => console.log("getbusinesses Error", err));
-});
+router.post("/businesses", businesses);
 
-router.get("/businesses/:id", (req, res) => {
-  res.json(req.params.id);
-});
+router.get("/businesses/:id", businessesId);
 
-router.post("/new-review", (req, res) => {
-  res.json();
-  //  cost data= req.body;
-});
-
-router.post("/send-location", (req, res) => {
-  //  cost data= req.body;
-
-  res.json();
-});
-
+router.post("/new-review", newReview);
 module.exports = router;
