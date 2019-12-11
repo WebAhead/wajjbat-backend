@@ -1,12 +1,11 @@
 const { calculatDestance } = require("../../helpers/calculatDestance");
-const { getBusinesses, topRating } = require("../queries/getbusinesses");
+const { getBusinesses, topRating } = require("../queries/getBusinesses");
 const {
-  getPrimaryImage,
   getBusinesseImages,
   getBusinesseReviews,
   getAllFromBusinesse,
   getBusinesseAvgRating
-} = require("../queries/getbusinessesbyid");
+} = require("../queries/getBusinessesById");
 const { addNewReview } = require("../queries/addNewReview");
 
 exports.businesses = async (req, res) => {
@@ -14,13 +13,12 @@ exports.businesses = async (req, res) => {
   try {
     const result = await getBusinesses();
     const tops = await topRating();
-    // const latlng = await getlatlng();
     const topsWithoutNullRating = tops.rows.filter(
-      item => item.rating !== null
+      ({ rating }) => rating !== null
     );
     // businessWithDestince include business with Cfrom user location
     let businessWithDestince = [];
-    // this foreach creat arrays with business details include sortByDist
+    // this foreach creat arrays whitch business details include sortByDist
     // calculatDestance is a function from geolib package that calculat distance between 2 points
     result.rows.forEach(business => {
       const { lat, lng } = business;
@@ -51,10 +49,9 @@ exports.businesses = async (req, res) => {
 exports.businessesId = async (req, res) => {
   const id = req.params.id;
   try {
-    const { rows: primaryImage } = await getPrimaryImage(id);
     const { rows: allBusinessImages } = await getBusinesseImages(id);
     let { rows: businessReviews } = await getBusinesseReviews(id);
-    const { rows: businesse } = await getAllFromBusinesse(id);
+    const { rows: business } = await getAllFromBusinesse(id);
     let { rows: businesseAvgRating } = await getBusinesseAvgRating(id);
 
     // sometimes businesseAvgRating is null , so we must check this option. if its not we concat it to the business info
@@ -62,7 +59,7 @@ exports.businessesId = async (req, res) => {
 
     businesseAvgRating = Math.round(businesseAvgRating[0].avg);
     const businesseWithRate = {
-      ...businesse[0],
+      ...business[0],
       rating: businesseAvgRating === 0 ? null : businesseAvgRating
     };
 
@@ -77,7 +74,7 @@ exports.businessesId = async (req, res) => {
 
     // finally, this is the result that we return
     res.json({
-      primaryImage: primaryImage[0].primaryimage,
+      primaryImage: business[0].primaryimage,
       subImages: allBusinessImages.map(item => item.image_url),
       details: businesseWithRate,
       reviews: [businessReviews][0]

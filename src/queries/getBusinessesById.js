@@ -4,10 +4,6 @@ const getAllFromBusinesse = id => {
   return db.query("SELECT * FROM businesses WHERE id=$1", [id]);
 };
 
-const getPrimaryImage = id => {
-  return db.query("select primaryimage from businesses where id=$1", [id]);
-};
-
 const getBusinesseImages = id => {
   return db.query("select image_url from images where business_id=$1", [id]);
 };
@@ -24,7 +20,6 @@ const getBusinesseAvgRating = id => {
 };
 
 module.exports = {
-  getPrimaryImage,
   getBusinesseImages,
   getBusinesseReviews,
   getAllFromBusinesse,
