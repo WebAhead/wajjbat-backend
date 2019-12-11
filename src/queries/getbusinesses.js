@@ -2,12 +2,15 @@ const db = require("../database/db_connection");
 
 const getBusinesses = () =>
   db.query(
-    "SELECT b.id,i.image_url,b.name,b.description,r.rating,b.business_type as type FROM businesses b JOIN images i ON b.id=i.business_id JOIN reviews r ON r.business_id=b.id"
+    "select b.id,b.lat,b.lng,b.primaryimage,b.name,round(avg(r.rating)) as rating,b.description,b.business_type as type from" +
+      " businesses b left join reviews r on r.business_id = b.id group by (b.id,b.primaryimage,b.name,b.description,b.business_type)"
   );
 
 const topRating = () => {
   return db.query(
-    "SELECT b.id,i.image_url,b.name,b.description,r.rating,b.business_type as type FROM businesses b JOIN images i ON b.id=i.business_id JOIN reviews r ON r.business_id=b.id order by r.rating desc LIMIT 5 "
+    "select b.id,b.primaryimage,b.name,round(avg(r.rating)) as rating,b.description,b.business_type as type from" +
+      " businesses b left join reviews r on r.business_id = b.id group by (b.id,b.primaryimage,b.name,b.description,b.business_type)" +
+      "order by avg(r.rating) desc limit 5"
   );
 };
 

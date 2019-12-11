@@ -46,10 +46,10 @@ CREATE TABLE  IF NOT EXISTS  reviews
 (
   id serial PRIMARY KEY,
   user_id INTEGER ,
-   business_id INTEGER ,   
-  rating  DECIMAL(2,1) NOT NULL,
+  business_id INTEGER ,   
+  rating DECIMAL(2,1) NOT NULL,
   review_body TEXT NOT NULL,
-  date_created DATE NOT NULL DEFAULT current_date,
+  date_created date default current_date not null,
   FOREIGN KEY(user_id) REFERENCES users(id),
   FOREIGN KEY(business_id)REFERENCES businesses(id)
 );
@@ -67,7 +67,11 @@ INSERT INTO businesses(user_id,name,primaryImage,description,cuisine,lat,lng,bus
 'true','true','true'),
 (2,'Jamies Flafel','https://webbox.imgix.net/images/kifsqlsyyrpwrthq/66a8ab43-857c-4d8f-96c0-3c348fa4c2ab.jpg?auto=format,compress&fit=crop&crop=entropy',
 'Enjoy your flafel in a fine dining senario, with the chef Jamie special spicy sauce',
-'jews food',35.23242 , 34.989571,'resturant','0523334446','haifa','jamie@gmail.com','true','true','false');
+'jews food',35.23242 , 34.989571,'resturant','0523334446','haifa','jamie@gmail.com','true','true','false'),
+(1,'Hosens Basta','https://lh3.googleusercontent.com/p/AF1QipMttB9sCFEAvWt8uI7Vu1djbMA_v7C0ltRVntaU=s1600-w1280-h1280',
+'small weird cafe along the road, come here to enjoy the view. and Hosen speaking english.',
+'Cafe',37.794044,37.989571,'resturant','052386777','nazerth','alswarma@gmail.com',
+'true','true','false');
 
 INSERT INTO images (business_id,image_url) VALUES
 (1,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP6rX2JulNFa3rlswp0WBQYoquLy9vVmKgvPLLACkGlLyHCBwA&s'),
@@ -81,8 +85,7 @@ INSERT INTO reviews (user_id,business_id,rating,review_body) VALUES
  (2,1,5,'Come enjoy some dank vaping 420 blaze it'),
  (2,1,3,'very good place'),
  (2,1,1,'come here'),
- (1,1,3,'lovely boobs');
+ (1,1,3,'lovely boobs'),
+ (1,3,5,'lovely place');
 
  COMMIT;
-
-
