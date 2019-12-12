@@ -1,10 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+
 const apiRoutes = require("./routes/api");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
+app.engine("html", require("ejs").renderFile);
+
 app.use(bodyParser.json());
 app.use(cors());
 
