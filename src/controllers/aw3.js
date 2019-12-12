@@ -8,7 +8,6 @@ exports.aw3 = (req, res) => {
   const s3 = new aws.S3();
   const fileName = req.query["file-name"];
   const fileType = req.query["file-type"];
-  console.log("aw3", fileName, fileType);
 
   const s3Params = {
     Bucket: S3_BUCKET,
