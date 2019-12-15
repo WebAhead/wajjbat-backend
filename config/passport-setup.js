@@ -28,7 +28,7 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
             }
             //if not, create user in our DB
             else {
-                Add_New_User(profile.id, profile.name.givenName, profile.name.familyName, 'test@gmail.com', profile.photos[0].value)
+                Add_New_User(profile.id, profile.name.givenName, profile.name.familyName, profile.emails[0].value, profile.photos[0].value)
                     .then(result => {
                         console.log('New user created');
                         done(null, profile.id);
@@ -62,7 +62,7 @@ passport.use('facebookToken', new FacebookTokenStrategy({
             }
             //if not, create user in our DB
             else {
-                Add_New_User(profile.id, profile.name.givenName, profile.name.familyName, 'ftest@gmail.com', profile.photos[0].value)
+                Add_New_User(profile.id, profile.name.givenName, profile.name.familyName, profile.emails[0].value, profile.photos[0].value)
                     .then(result => {
                         console.log('New user created');
                         done(null, profile.id);
