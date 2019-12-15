@@ -1,4 +1,6 @@
 const { calculatDestance } = require("../../helpers/calculatDestance");
+const JWT = require('jsonwebtoken');
+const { JWT_SECRET } = require('../../config/keys');
 const { getBusinesses, topRating } = require("../queries/getBusinesses");
 const {
   getBusinesseImages,
@@ -7,6 +9,15 @@ const {
   getBusinesseAvgRating
 } = require("../queries/getBusinessesById");
 const { addNewReview } = require("../queries/addNewReview");
+
+signToken = user => {
+  return JWT.sign({
+    iss: 'CodeWorkr',
+    sub: user.id,
+    iat: new Date().getTime(), // current time
+    exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+  }, JWT_SECRET);
+};
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -90,3 +101,17 @@ exports.newReview = (req, res) => {
     .then(res.status(200).send("the data added successfully"))
     .catch(err => console.log(err));
 };
+
+exports.googleOAuth = async (req, res, next) => {
+  // Generate token
+  console.log('got here');
+  const token = signToken(req.user);
+  res.status(200).json({ token });
+};
+
+exports.facebookOAuth = async (req, res, next) => {
+  // Generate token
+  const token = signToken(req.user);
+
+  res.status(200).json({ token });
+}
