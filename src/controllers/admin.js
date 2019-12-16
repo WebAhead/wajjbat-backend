@@ -2,7 +2,6 @@ const { getAllBussiness } = require("../queries/getAllBusinesses");
 const { getAllUsers } = require("../queries/getAllUsers");
 
 const { getaUserById } = require("../queries/getaUserById");
-const { editUserById } = require("../queries/editUserById");
 const { getAllFromBusinesse } = require("../queries/getBusinessesById");
 const { editBusinesById } = require("../queries/editBusinesById");
 
@@ -24,7 +23,6 @@ exports.users = async (req, res) => {
 
     res.append("Access-Control-Expose-Headers", "Content-Range");
     res.set("Content-Range", "businesses 0-24/100");
-    // console.log(allUsers);
     res.json(allUsers);
   } catch (err) {
     console.log(err);
