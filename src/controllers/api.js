@@ -26,7 +26,7 @@ exports.businesses = async (req, res) => {
       const distance = calculatDestance(businessLocation, userLocation);
       businessWithDestince = [
         ...businessWithDestince,
-        { ...business, distance }
+        { ...business, distance, image: business.primaryimage }
       ];
     });
     // this function sorts business by distance from user location
@@ -38,8 +38,8 @@ exports.businesses = async (req, res) => {
     // [topsWithoutNullRating] witch is the top 5 rating businnes
     //  [sortByDist] : sortting business by distance from user location
     res.status(200).json({
-      topRated: [topsWithoutNullRating],
-      businesses: [sortByDist]
+      topRated: topsWithoutNullRating,
+      businesses: sortByDist
     });
   } catch (err) {
     console.log("Error on businesses", err);
