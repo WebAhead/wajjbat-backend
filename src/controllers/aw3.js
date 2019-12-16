@@ -5,6 +5,7 @@ aws.config.region = "eu-central-1";
 const S3_BUCKET = process.env.S3_BUCKET;
 
 exports.aw3 = (req, res) => {
+  console.log(req);
   const s3 = new aws.S3();
   const fileName = req.query["file-name"];
   const fileType = req.query["file-type"];
