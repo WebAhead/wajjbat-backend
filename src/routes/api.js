@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { businesses, businessesId, newReview, googleFacebook, stam } = require("../controllers/api");
+const { businesses, businessesId, newReview, googleFacebook } = require("../controllers/api");
 const env = require("env2");
 env("./config.env");
 
@@ -24,6 +24,6 @@ router.get("/businesses/:id", businessesId);
 
 router.post("/new-review", newReview);
 
-router.get('/stam', stam);
+
 
 module.exports = router;

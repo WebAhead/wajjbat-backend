@@ -11,13 +11,6 @@ const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require('../queries/findUser');
 const { addNewUser } = require('../queries/addNewUser');
 
-
-exports.stam = (req, res) => {
-  res.cookie('moshe', 'walla', { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-  res.send("ok");
-}
-
-
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
   try {
@@ -35,7 +28,7 @@ exports.businesses = async (req, res) => {
       const businessLocation = { lat, lng };
       const distance = calculatDestance(businessLocation, userLocation);
       businessWithDestince = [
-        ...businessWithDestince,
+        ...businessWondPrithDestince,
         { ...business, distance }
       ];
     });
