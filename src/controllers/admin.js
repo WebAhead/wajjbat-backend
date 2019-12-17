@@ -2,6 +2,7 @@ const { getAllBussiness } = require("../queries/getAllBusinesses");
 const { getAllUsers } = require("../queries/getAllUsers");
 
 const { getaUserById } = require("../queries/getaUserById");
+const { editUserById } = require("../queries/editUserById");
 const { getAllFromBusinesse } = require("../queries/getBusinessesById");
 const { editBusinesById } = require("../queries/editBusinesById");
 
