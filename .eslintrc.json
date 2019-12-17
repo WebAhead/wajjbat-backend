@@ -4,7 +4,9 @@
     "commonjs": true,
     "es6": true
   },
-  "extends": ["standard"],
+  "extends": [
+    "standard"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -12,8 +14,17 @@
   "parserOptions": {
     "ecmaVersion": 2018
   },
-  "rules": {    
-    "quotes": ["error", "double"],
-    "semi": [2, "always"]
+  "rules": {
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "semi": [
+      2,
+      "always"
+    ],
+    "padded-blocks": [
+      "disable"
+    ]
   }
 }
