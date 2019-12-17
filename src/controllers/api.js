@@ -1,6 +1,5 @@
+const jwt = require('jsonwebtoken');
 const { calculatDestance } = require("../../helpers/calculatDestance");
-const JWT = require('jsonwebtoken');
-const { JWT_SECRET } = require('../../config/keys');
 const { getBusinesses, topRating } = require("../queries/getBusinesses");
 const {
   getBusinesseImages,
@@ -9,15 +8,15 @@ const {
   getBusinesseAvgRating
 } = require("../queries/getBusinessesById");
 const { addNewReview } = require("../queries/addNewReview");
+const { findUser } = require('../queries/findUser');
+const { addNewUser } = require('../queries/addNewUser');
 
-signToken = user => {
-  return JWT.sign({
-    iss: 'CodeWorkr',
-    sub: user.id,
-    iat: new Date().getTime(), // current time
-    exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
-  }, JWT_SECRET);
-};
+
+exports.stam = (req, res) => {
+  res.cookie('moshe', 'walla', { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+  res.send("ok");
+}
+
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -102,16 +101,46 @@ exports.newReview = (req, res) => {
     .catch(err => console.log(err));
 };
 
-exports.googleOAuth = async (req, res, next) => {
-  // Generate token
-  console.log('got here');
-  const token = signToken(req.user);
-  res.status(200).json({ token });
-};
+const googleFacebookHandle = async (user, res) => {
+  try {
+    const { rows: currentUser } = await findUser(user.id);
 
-exports.facebookOAuth = async (req, res, next) => {
-  // Generate token
-  const token = signToken(req.user);
+    if (Object.keys(user).length > 0) {
+      if (Object.keys(currentUser).length > 0) {
+        console.log('The user already exist');
 
-  res.status(200).json({ token });
+
+        res.cookie('jwt', jwt.sign({ user: user.name }, process.env.JWT_SECRET), { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+        res.status(200).json({
+          "success": true,
+          "msg": 'The user already exist'
+        })
+
+      } else {
+        const result = await addNewUser(user.id, user.name.split(" ")[0], user.name.split(" ")[1], user.email, user.url);
+        console.log('New user created');
+        res.cookie('jwt', "omri", { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+        res.status(200).json({
+          "success": true,
+          "msg": 'New user created'
+        });
+      }
+    } else {
+      res.status(400).json({
+        "success": false,
+        "msg": 'Error'
+      })
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
+
+exports.googleFacebook = async (req, res) => {
+  const user = req.body;
+  console.log(req.body);
+  await googleFacebookHandle(user, res);
+}
+
+
+
