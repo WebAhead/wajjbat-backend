@@ -6,7 +6,6 @@ const apiRoutes = require("./routes/api");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
-app.engine("html", require("ejs").renderFile);
 
 app.use(bodyParser.json());
 app.use(cors());
