@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const { calculatDestance } = require("../../helpers/calculatDestance");
 const { getBusinesses, topRating } = require("../queries/getBusinesses");
 const {
@@ -8,8 +8,8 @@ const {
   getBusinesseAvgRating
 } = require("../queries/getBusinessesById");
 const { addNewReview } = require("../queries/addNewReview");
-const { findUser } = require('../queries/findUser');
-const { addNewUser } = require('../queries/addNewUser');
+const { findUser } = require("../queries/findUser");
+const { addNewUser } = require("../queries/addNewUser");
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -20,20 +20,20 @@ exports.businesses = async (req, res) => {
       ({ rating }) => rating !== null
     );
     // businessWithDestince include business with Cfrom user location
-    let businessWithDestince = [];
+    let businessWithDistance = [];
     // this foreach creat arrays whitch business details include sortByDist
     // calculatDestance is a function from geolib package that calculat distance between 2 points
     result.rows.forEach(business => {
       const { lat, lng } = business;
       const businessLocation = { lat, lng };
       const distance = calculatDestance(businessLocation, userLocation);
-      businessWithDestince = [
-        ...businessWondPrithDestince,
-        { ...business, distance }
+      businessWithDistance = [
+        ...businessWithDistance,
+        { ...business, distance, image: business.primaryimage }
       ];
     });
     // this function sorts business by distance from user location
-    const sortByDist = businessWithDestince.sort(
+    const sortByDist = businessWithDistance.sort(
       (a, b) => a.distance - b.distance
     );
 
@@ -41,8 +41,8 @@ exports.businesses = async (req, res) => {
     // [topsWithoutNullRating] witch is the top 5 rating businnes
     //  [sortByDist] : sortting business by distance from user location
     res.status(200).json({
-      topRated: [topsWithoutNullRating],
-      businesses: [sortByDist]
+      topRated: topsWithoutNullRating,
+      businesses: sortByDist
     });
   } catch (err) {
     console.log("Error on businesses", err);
@@ -96,44 +96,53 @@ exports.newReview = (req, res) => {
 
 const googleFacebookHandle = async (user, res) => {
   try {
-    const { rows: currentUser } = await findUser(user.id);
+    const { rows: currentUser } = await findUser(user.email);
 
     if (Object.keys(user).length > 0) {
       if (Object.keys(currentUser).length > 0) {
-        console.log('The user already exist');
 
+        // add id in the cookie 
+        res.cookie("access_token",
+          jwt.sign({ user: user.name }, process.env.JWT_SECRET),
+          { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }
+        );
 
-        res.cookie('jwt', jwt.sign({ user: user.name }, process.env.JWT_SECRET), { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
         res.status(200).json({
-          "success": true,
-          "msg": 'The user already exist'
-        })
-
+          success: true,
+          msg: "The user already exist"
+        });
       } else {
-        const result = await addNewUser(user.id, user.name.split(" ")[0], user.name.split(" ")[1], user.email, user.url);
-        console.log('New user created');
-        res.cookie('jwt', "omri", { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+        await addNewUser(user.name.split(" ")[0], user.name.split(" ")[1], user.email, user.url);
+
+        // add id in the cookie 
+        res.cookie("access_token",
+          jwt.sign({ user: user.name }, process.env.JWT_SECRET),
+          { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }
+        );
+
         res.status(200).json({
-          "success": true,
-          "msg": 'New user created'
+          success: true,
+          msg: "New user created"
         });
       }
     } else {
       res.status(400).json({
-        "success": false,
-        "msg": 'Error'
-      })
+        success: false,
+        msg: "Error"
+      });
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-}
+};
 
-exports.googleFacebook = async (req, res) => {
-  const user = req.body;
-  console.log(req.body);
-  await googleFacebookHandle(user, res);
-}
-
-
-
+exports.googleFacebook = async (req, res, next) => {
+  try {
+    await googleFacebookHandle(req.body, res);
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      msg: "Error"
+    });
+  }
+};

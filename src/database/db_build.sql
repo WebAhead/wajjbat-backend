@@ -5,13 +5,10 @@ BEGIN;
 CREATE TABLE
 IF NOT EXISTS users
 (
-  id NUMERIC PRIMARY KEY,
-  first_name VARCHAR
-(100) NOT NULL,
-  last_name VARCHAR
-(100) NOT NULL,
-  email  VARCHAR
-(100) UNIQUE,
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR (100) NOT NULL,
+  last_name VARCHAR (100) NOT NULL,
+  email  VARCHAR (100) UNIQUE,
   profile_image TEXT 
 );
 
@@ -20,25 +17,16 @@ IF NOT EXISTS  businesses
 (
   id serial PRIMARY KEY,
   user_id NUMERIC ,
-  name VARCHAR
-(500) NOT NULL,
-  primaryImage VARCHAR
-(500) NOT NULL,
+  name VARCHAR (500) NOT NULL,
+  primaryImage VARCHAR (500) NOT NULL,
    description TEXT NOT NULL,
-  cuisine VARCHAR
-(100)  NULL,
-  lat DECIMAL
-(10,7) NOT NULL,
-  lng DECIMAL
-(10,7) NOT NULL,
-  business_type VARCHAR
-(100) NOT NULL,
-  phone VARCHAR
-(50) NOT NULL,
-  address VARCHAR
-(100) NOT NULL,
-  email VARCHAR
-(100) ,
+  cuisine VARCHAR (100)  NULL,
+  lat DECIMAL (10,7) NOT NULL,
+  lng DECIMAL (10,7) NOT NULL,
+  business_type VARCHAR (100) NOT NULL,
+  phone VARCHAR (50) NOT NULL,
+  address VARCHAR (100) NOT NULL,
+  email VARCHAR (100) ,
   parking  BOOLEAN ,
   freeWifi  BOOLEAN ,
   smokingArea  BOOLEAN,
@@ -53,10 +41,8 @@ IF NOT EXISTS  images
 (
    id serial PRIMARY KEY,
    business_id INTEGER,
-   image_url VARCHAR
-(500) NOT NULL,
-   FOREIGN KEY
-(business_id) REFERENCES businesses
+   image_url VARCHAR (500) NOT NULL,
+   FOREIGN KEY (business_id) REFERENCES businesses
 (id)
 
 );
@@ -68,16 +54,11 @@ IF NOT EXISTS  reviews
   id serial PRIMARY KEY,
   user_id INTEGER ,
   business_id INTEGER ,   
-  rating DECIMAL
-(2,1) NOT NULL,
+  rating INTEGER NOT NULL,
   review_body TEXT NOT NULL,
   date_created date default current_date not null,
-  FOREIGN KEY
-(user_id) REFERENCES users
-(id),
-  FOREIGN KEY
-(business_id)REFERENCES businesses
-(id)
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (business_id)REFERENCES businesses (id)
 );
 
 
