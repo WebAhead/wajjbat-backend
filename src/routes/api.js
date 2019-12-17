@@ -1,7 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { businesses, businessesId, newReview } = require("../controllers/api");
+const { businesses, businessesId, newReview, googleFacebook } = require("../controllers/api");
 const { s3Controller } = require("../controllers/s3Controller");
+const env = require("env2");
+env("./config.env");
+
+//  google & facebook oauth
+router.post("/oauth/google", googleFacebook);
+
+router.post("/oauth/facebook", googleFacebook);
 
 router.post("/businesses", businesses);
 
