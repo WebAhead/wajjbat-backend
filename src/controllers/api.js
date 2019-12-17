@@ -103,7 +103,7 @@ const googleFacebookHandle = async (user, res) => {
 
         // add id in the cookie 
         res.cookie("access_token",
-          jwt.sign({ user: user.name }, process.env.JWT_SECRET),
+          jwt.sign({ email: user.email }, process.env.JWT_SECRET),
           { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }
         );
 
