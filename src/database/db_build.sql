@@ -15,6 +15,7 @@ CREATE TABLE  IF NOT EXISTS  businesses
 (
   id serial PRIMARY KEY,
   user_id INTEGER ,
+  approved VARCHAR(500) DEFAULT 'pending' NOT NULL,
   name VARCHAR(500) NOT NULL,
   primaryImage VARCHAR(500) NOT NULL,
    description TEXT NOT NULL,
