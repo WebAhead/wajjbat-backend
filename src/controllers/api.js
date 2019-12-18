@@ -10,6 +10,7 @@ const {
 const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require("../queries/findUser");
 const { addNewUser } = require("../queries/addNewUser");
+const { addNewBussines, getId, addImage } = require("../queries/addNewBusiness");
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -86,6 +87,28 @@ exports.businessesId = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.newBusiness = async (req, res) => {
+  try {
+    const data = req.body;
+    await addNewBussines(data);
+    const { rows: id } = await getId();
+    const businessId = id[0].max;
+    data.subImgs.forEach(async (img) => {
+      await addImage(businessId, img);
+    });
+    res.status(200).send({
+      success: true,
+      msg: "New Business added"
+    })
+  } catch (err) {
+    console.log('added business', err);
+    res.status(500);
+  }
+
+
+
+}
 
 exports.newReview = (req, res) => {
   const data = req.body;

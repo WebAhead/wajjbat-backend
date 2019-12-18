@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { businesses, businessesId, newReview, googleFacebook } = require("../controllers/api");
+const { businesses, businessesId, newReview, googleFacebook, newBusiness } = require("../controllers/api");
 const { s3Controller } = require("../controllers/s3Controller");
 const env = require("env2");
 env("./config.env");
@@ -13,6 +13,8 @@ router.post("/oauth/facebook", googleFacebook);
 router.post("/businesses", businesses);
 
 router.get("/businesses/:id", businessesId);
+
+router.post("/new-businesses", newBusiness);
 
 router.post("/new-review", newReview);
 
