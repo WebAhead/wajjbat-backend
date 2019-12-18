@@ -10,9 +10,14 @@ exports.businesses = async (req, res) => {
   try {
     const { rows: allBusinesses } = await getAllBussiness();
 
+    const normalizedAllBusinesses = allBusinesses.map(item => ({
+      ...item,
+      approved: item.approved === "approved"
+    }));
+
     res.append("Access-Control-Expose-Headers", "Content-Range");
     res.set("Content-Range", "businesses 0-24/100");
-    res.json(allBusinesses);
+    res.json(normalizedAllBusinesses);
   } catch (err) {
     console.log(err);
   }
@@ -53,7 +58,6 @@ exports.editUserById = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const result = await getaUserById(req.params.id);
-    console.log(1, result);
     res.send(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -63,7 +67,6 @@ exports.getUserById = async (req, res) => {
 exports.getBusinesseById = async (req, res) => {
   try {
     const result = await getAllFromBusinesse(req.params.id);
-    console.log(1, result);
     res.send(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -73,7 +76,7 @@ exports.getBusinesseById = async (req, res) => {
 exports.editBusinesById = async (req, res) => {
   const data = req.body;
   try {
-    await editBusinesById(data);
+    await editBusinesById({ ...data, id: req.params.id });
     res.send({ success: true });
   } catch (error) {
     console.log(error);

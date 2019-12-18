@@ -17,6 +17,6 @@ router.get("/businesses/:id", businessesId);
 router.post("/new-review", newReview);
 
 // router that handel aw3 requests
-router.get("/sign-s3", aw3);
+router.get("/sign-s3", s3Controller);
 
 module.exports = router;
