@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { findUser } = require('../src/queries/findUser');
 
 exports.verifyToken = (req, res, next) => {
-    if (req.cookies) {
+    if (req.cookies.access_token) {
         jwt.verify(req.cookies.access_token, process.env.JWT_SECRET, async (err, authData) => {
             try {
                 if (err) {

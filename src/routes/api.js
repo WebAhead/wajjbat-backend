@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { businesses, businessesId, newReview, googleFacebook } = require("../controllers/api");
-const { aw3 } = require("../controllers/s3Controller");
+const { s3Controller } = require("../controllers/s3Controller");
 const env = require("env2");
 env("./config.env");
 
@@ -17,6 +17,6 @@ router.get("/businesses/:id", businessesId);
 router.post("/new-review", newReview);
 
 // router that handel aw3 requests
-router.get("/sign-s3", aw3);
+router.get("/sign-s3", s3Controller);
 
 module.exports = router;
