@@ -9,7 +9,10 @@ exports.verifyToken = (req, res, next) => {
                     res.sendStatus(401);
                 } else {
                     const { rows: currentUser } = await findUser(authData.email);
-                    if (currentUser.length > 0) next();
+                    if (currentUser.length > 0) {
+                        req.id = currentUser[0].id;
+                        next();
+                    }
                     else res.sendStatus(401);
 
                 }

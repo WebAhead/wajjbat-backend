@@ -11,6 +11,9 @@ const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require("../queries/findUser");
 const { addNewUser } = require("../queries/addNewUser");
 const { addNewBussines, getId, addImage } = require("../queries/addNewBusiness");
+const { bussinessList } = require("../queries/getAllBusinesses");
+const { getReviewByUser } = require("../queries/getReviewByUser");
+const { getaUserById } = require("../queries/getaUserById");
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -117,6 +120,7 @@ exports.newReview = (req, res) => {
     .catch(err => console.log(err));
 };
 
+
 const googleFacebookHandle = async (user, res) => {
   try {
     const { rows: currentUser } = await findUser(user.email);
@@ -169,3 +173,38 @@ exports.googleFacebook = async (req, res, next) => {
     });
   }
 };
+
+exports.businessesList = async (req, res) => {
+  try {
+    const { rows: busList } = await bussinessList(req.id);
+    res.send(busList);
+
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.getUserReviews = async (req, res) => {
+  try {
+    let { rows: user } = await getaUserById(req.id);
+    let { rows: reviews } = await getReviewByUser(req.id);
+    reviews = reviews.map((obj) => {
+      return {
+        ...obj,
+        reviewdate: obj.reviewdate.toISOString().split("T")[0]
+      }
+    });
+    res.json({
+      userDetails: {
+        firstName: user[0].first_name,
+        lastName: user[0].last_name,
+        profilePic: user[0].profile_image
+      },
+      reviews: reviews
+    });
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+
