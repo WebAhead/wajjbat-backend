@@ -11,6 +11,7 @@ const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require("../queries/findUser");
 const { addNewUser } = require("../queries/addNewUser");
 const { addNewBussines, getId, addImage } = require("../queries/addNewBusiness");
+const { bussinessList } = require("../queries/getAllBusinesses")
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -117,6 +118,7 @@ exports.newReview = (req, res) => {
     .catch(err => console.log(err));
 };
 
+
 const googleFacebookHandle = async (user, res) => {
   try {
     const { rows: currentUser } = await findUser(user.email);
@@ -169,3 +171,13 @@ exports.googleFacebook = async (req, res, next) => {
     });
   }
 };
+
+exports.businessesList = async (req, res) => {
+  try {
+    const { rows: busList } = await bussinessList();
+    res.send(busList);
+
+  } catch (err) {
+    console.log(err)
+  }
+}
