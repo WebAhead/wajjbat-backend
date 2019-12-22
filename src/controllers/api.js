@@ -11,7 +11,9 @@ const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require("../queries/findUser");
 const { addNewUser } = require("../queries/addNewUser");
 const { addNewBussines, getId, addImage } = require("../queries/addNewBusiness");
-const { bussinessList } = require("../queries/getAllBusinesses")
+const { bussinessList } = require("../queries/getAllBusinesses");
+const { getReviewByUser } = require("../queries/getReviewByUser");
+const { getaUserById } = require("../queries/getaUserById");
 
 exports.businesses = async (req, res) => {
   const userLocation = req.body;
@@ -174,10 +176,32 @@ exports.googleFacebook = async (req, res, next) => {
 
 exports.businessesList = async (req, res) => {
   try {
-    const { rows: busList } = await bussinessList();
+    const { rows: busList } = await bussinessList(req.id);
     res.send(busList);
 
   } catch (err) {
     console.log(err)
   }
 }
+
+exports.getUserReviews = async (req, res) => {
+  try {
+    let { rows: user } = await getaUserById(req.id);
+    let { rows: reviews } = await getReviewByUser(req.id);
+    delete user[0].email;
+    reviews = reviews.map((obj) => {
+      return {
+        ...obj,
+        reviewdate: obj.reviewdate.toISOString().split("T")[0]
+      }
+    });
+    res.json({
+      userDetails: user[0],
+      reviews: reviews
+    });
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+

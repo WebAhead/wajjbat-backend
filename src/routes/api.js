@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { businesses, businessesId, newReview, googleFacebook, newBusiness, businessesList } = require("../controllers/api");
-
+const { businesses, businessesId, newReview, googleFacebook, newBusiness, businessesList, getUserReviews } = require("../controllers/api");
+const { verifyToken } = require('../../authMiddleware/verifyToken')
 const { s3Controller } = require("../controllers/s3Controller");
 const env = require("env2");
 env("./config.env");
@@ -22,7 +22,12 @@ router.post("/new-businesses", newBusiness);
 //add new review
 router.post("/new-review", newReview);
 
-router.get('/bussiness-list', businessesList)
+//bussiness-list per user
+router.get('/bussiness-list', verifyToken, businessesList);
+
+router.get('/getUserReviews', verifyToken, getUserReviews);
+
+
 
 // router that handel aw3 requests
 router.get("/sign-s3", s3Controller);
