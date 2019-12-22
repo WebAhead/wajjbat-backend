@@ -188,7 +188,6 @@ exports.getUserReviews = async (req, res) => {
   try {
     let { rows: user } = await getaUserById(req.id);
     let { rows: reviews } = await getReviewByUser(req.id);
-    delete user[0].email;
     reviews = reviews.map((obj) => {
       return {
         ...obj,
@@ -196,7 +195,11 @@ exports.getUserReviews = async (req, res) => {
       }
     });
     res.json({
-      userDetails: user[0],
+      userDetails: {
+        firstName: user[0].first_name,
+        lastName: user[0].last_name,
+        profilePic: user[0].profile_image
+      },
       reviews: reviews
     });
   } catch (err) {
