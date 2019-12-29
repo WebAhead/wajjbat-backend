@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,
-  origin: 'http://localhost:3000'
+  origin: process.env.ORIGIN
 }));
 // initialize passport
 
