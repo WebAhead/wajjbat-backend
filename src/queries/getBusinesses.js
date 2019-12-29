@@ -2,7 +2,7 @@ const db = require("../database/db_connection");
 
 const getBusinesses = () =>
   db.query(
-    `select b.id,b.lat,b.lng,b.primaryimage,b.name,round(avg(r.rating)) as rating,b.description,b.business_type as type 
+    `select b.id,b.lat,b.lng,b.primaryimage,b.name,round(avg(r.rating)) as rating,b.description,b.business_type b.cuisine as type 
     from businesses 
     b left join reviews r on r.business_id = b.id
     where approved='approved' 
