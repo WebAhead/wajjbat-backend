@@ -10,7 +10,11 @@ const {
 const { addNewReview } = require("../queries/addNewReview");
 const { findUser } = require("../queries/findUser");
 const { addNewUser } = require("../queries/addNewUser");
-const { addNewBussines, getId, addImage } = require("../queries/addNewBusiness");
+const {
+  addNewBussines,
+  getId,
+  addImage
+} = require("../queries/addNewBusiness");
 const { bussinessList } = require("../queries/getAllBusinesses");
 const { getReviewByUser } = require("../queries/getReviewByUser");
 const { getaUserById } = require("../queries/getaUserById");
@@ -97,21 +101,18 @@ exports.newBusiness = async (req, res) => {
     await addNewBussines(data);
     const { rows: id } = await getId();
     const businessId = id[0].max;
-    data.subImgs.forEach(async (img) => {
+    data.subImgs.forEach(async img => {
       await addImage(businessId, img);
     });
     res.status(200).send({
       success: true,
       msg: "New Business added"
-    })
+    });
   } catch (err) {
-    console.log('added business', err);
+    console.log("added business", err);
     res.status(500);
   }
-
-
-
-}
+};
 
 exports.newReview = (req, res) => {
   const data = req.body;
@@ -120,27 +121,33 @@ exports.newReview = (req, res) => {
     .catch(err => console.log(err));
 };
 
-
 const googleFacebookHandle = async (user, res) => {
   try {
     const { rows: currentUser } = await findUser(user.email);
 
     if (Object.keys(user).length > 0) {
       if (Object.keys(currentUser).length > 0) {
-
-        // add id in the cookie 
-        res.cookie("access_token",
-          jwt.sign({ email: user.email }, process.env.JWT_SECRET));
+        // add id in the cookie
+        res.cookie(
+          "access_token",
+          jwt.sign({ email: user.email }, process.env.JWT_SECRET)
+        );
 
         res.status(200).json({
           success: true,
           msg: "The user already exist"
         });
       } else {
-        await addNewUser(user.name.split(" ")[0], user.name.split(" ")[1], user.email, user.url);
+        await addNewUser(
+          user.name.split(" ")[0],
+          user.name.split(" ")[1],
+          user.email,
+          user.url
+        );
 
-        // add id in the cookie 
-        res.cookie("access_token",
+        // add id in the cookie
+        res.cookie(
+          "access_token",
           jwt.sign({ user: user.name }, process.env.JWT_SECRET),
           { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }
         );
@@ -176,21 +183,20 @@ exports.businessesList = async (req, res) => {
   try {
     const { rows: busList } = await bussinessList(req.id);
     res.send(busList);
-
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-}
+};
 
 exports.getUserReviews = async (req, res) => {
   try {
     let { rows: user } = await getaUserById(req.id);
     let { rows: reviews } = await getReviewByUser(req.id);
-    reviews = reviews.map((obj) => {
+    reviews = reviews.map(obj => {
       return {
         ...obj,
         reviewdate: obj.reviewdate.toISOString().split("T")[0]
-      }
+      };
     });
     res.json({
       userDetails: {
@@ -201,8 +207,6 @@ exports.getUserReviews = async (req, res) => {
       reviews: reviews
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-}
-
-
+};
