@@ -3,7 +3,10 @@ const { getAllUsers } = require("../queries/getAllUsers");
 
 const { getaUserById } = require("../queries/getaUserById");
 const { editUserById } = require("../queries/editUserById");
-const { getAllFromBusinesse } = require("../queries/getBusinessesById");
+const {
+  getAllFromBusinesse,
+  getBusinesseImages
+} = require("../queries/getBusinessesById");
 const { editBusinesById } = require("../queries/editBusinesById");
 const { getReviewsByUserId } = require("../queries/getReviewsByUserId");
 const { deleteReviewById } = require("../queries/deleteReviewById");
@@ -69,6 +72,8 @@ exports.getUserById = async (req, res) => {
 exports.getBusinesseById = async (req, res) => {
   try {
     const result = await getAllFromBusinesse(req.params.id);
+    const { rows: subImages } = await getBusinesseImages(req.params.id);
+    result.rows[0].subImages = subImages;
     res.send(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -96,7 +101,6 @@ exports.getReviewsByUserId = async (req, res) => {
         reviewdate: item.reviewdate.toISOString().split("T")[0]
       };
     });
-
     res.json(Reviews);
   } catch (error) {
     console.log(error);

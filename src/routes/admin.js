@@ -20,8 +20,8 @@ router.put("/businesses/:id", editBusinesById);
 router.put("/users/:id", editUserById);
 router.get("/users/:id", getUserById);
 router.get("/users", users);
-
+               
 router.get("/reviewsbyuserid/:id", getReviewsByUserId);
 router.get("/deletereviewbyid/:id", deleteReviewById);
-
+            
 module.exports = router;
