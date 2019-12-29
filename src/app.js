@@ -14,6 +14,7 @@ app.use(cors({
   credentials: true,
   origin: process.env.ORIGIN
 }));
+
 // initialize passport
 
 app.use("/api", apiRoutes);

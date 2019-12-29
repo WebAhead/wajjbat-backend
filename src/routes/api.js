@@ -20,7 +20,7 @@ router.get("/businesses/:id", businessesId);
 router.post("/new-businesses", newBusiness);
 
 //add new review
-router.post("/new-review", newReview);
+router.post("/new-review", verifyToken(false), newReview);
 
 //bussiness-list per user
 router.get('/bussiness-list', verifyToken(false), businessesList);
