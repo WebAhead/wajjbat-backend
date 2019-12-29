@@ -11,7 +11,7 @@ const getBusinesses = () =>
 
 const topRating = () => {
   return db.query(
-    `select b.id,b.primaryimage as image,b.name,round(avg(r.rating)) as rating,b.description,b.business_type as type 
+    `select b.id,b.primaryimage as image,b.name,round(avg(r.rating)) as rating,b.description,b.cuisine,b.business_type as type 
     from  businesses b left join reviews r on r.business_id = b.id 
     where approved='approved' 
     group by (b.id,b.primaryimage,b.name,b.description,b.business_type) 
