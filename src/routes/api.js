@@ -23,10 +23,11 @@ router.post("/new-businesses", newBusiness);
 router.post("/new-review", newReview);
 
 //bussiness-list per user
-router.get('/bussiness-list', verifyToken, businessesList);
+router.get('/bussiness-list', verifyToken(false), businessesList);
 
-router.get('/getUserReviews', verifyToken, getUserReviews);
+router.get('/getUserReviews', verifyToken(false), getUserReviews);
 
+router.get('/isLoggedIn', verifyToken(true))
 
 
 // router that handel aw3 requests

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { findUser } = require('../src/queries/findUser');
 
-exports.verifyToken = (req, res, next) => {
+exports.verifyToken = (returnData = false) => (req, res, next) => {
     if (req.cookies.access_token) {
         jwt.verify(req.cookies.access_token, process.env.JWT_SECRET, async (err, authData) => {
             try {
@@ -11,7 +11,7 @@ exports.verifyToken = (req, res, next) => {
                     const { rows: currentUser } = await findUser(authData.email);
                     if (currentUser.length > 0) {
                         req.id = currentUser[0].id;
-                        next();
+                        return returnData ? res.send({ id: currentUser[0].id }) : next();
                     }
                     else res.sendStatus(401);
 
@@ -22,6 +22,6 @@ exports.verifyToken = (req, res, next) => {
             }
         })
     } else {
-        res.sendStatus(403);
+        return returnData ? res.send({ id: null }) : res.sendStatus(403);
     }
 }

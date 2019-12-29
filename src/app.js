@@ -9,7 +9,11 @@ const app = express();
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  optionsSuccessStatus: 200,
+  credentials: true,
+  origin: 'http://localhost:3000'
+}));
 // initialize passport
 
 app.use("/api", apiRoutes);
