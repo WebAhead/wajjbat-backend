@@ -7,15 +7,15 @@ exports.verifyToken = (returnData = false) => (req, res, next) => {
             try {
                 if (err) {
                     res.sendStatus(401);
-                } else {
-                    const { rows: currentUser } = await findUser(authData.email);
-                    if (currentUser.length > 0) {
-                        req.id = currentUser[0].id;
-                        return returnData ? res.send({ id: currentUser[0].id }) : next();
-                    }
-                    else res.sendStatus(401);
-
                 }
+
+                const { rows: currentUser } = await findUser(authData.email);
+                if (currentUser.length > 0) {
+                    req.id = currentUser[0].id;
+                    return returnData ? res.send({ id: currentUser[0].id }) : next();
+                }
+                else res.sendStatus(401);
+
             } catch (err) {
                 console.log(err);
                 res.sendStatus(400);

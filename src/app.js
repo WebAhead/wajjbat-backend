@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,
-  origin: process.env.ORIGIN
+  origin: process.env.ORIGIN.split(',')
 }));
 
 // initialize passport

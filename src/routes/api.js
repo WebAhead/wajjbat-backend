@@ -23,7 +23,7 @@ router.post("/new-businesses", newBusiness);
 router.post("/new-review", verifyToken(false), newReview);
 
 //bussiness-list per user
-router.get('/bussiness-list', verifyToken(false), businessesList);
+router.get('/business-list', verifyToken(false), businessesList);
 
 router.get('/getUserReviews', verifyToken(false), getUserReviews);
 
