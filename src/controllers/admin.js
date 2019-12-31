@@ -17,7 +17,7 @@ exports.businesses = async (req, res) => {
 
     const normalizedAllBusinesses = allBusinesses.map(item => ({
       ...item,
-      approved: item.approved === "approved"
+      approved: item.approved
     }));
 
     res.append("Access-Control-Expose-Headers", "Content-Range");

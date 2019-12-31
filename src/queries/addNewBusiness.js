@@ -16,7 +16,7 @@ const addNewBussines = data => {
             data.cuisine,
             data.lat,
             data.lng,
-            data.businessType,
+            data.type,
             data.phone,
             data.address,
             data.email,
