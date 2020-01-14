@@ -1,17 +1,13 @@
-const { getAllBussiness } = require("../queries/getAllBusinesses");
-const { getAllUsers } = require("../queries/getAllUsers");
+import { getAllBussiness } from '../queries/getAllBusinesses';
+import { getAllUsers } from '../queries/getAllUsers';
 
-const { getaUserById } = require("../queries/getaUserById");
-const { editUserById } = require("../queries/editUserById");
-const {
-  getAllFromBusinesse,
-  getBusinesseImages
-} = require("../queries/getBusinessesById");
-const { editBusinesById } = require("../queries/editBusinesById");
-const { getReviewsByUserId } = require("../queries/getReviewsByUserId");
-const { deleteReviewById } = require("../queries/deleteReviewById");
+import { getaUserById } from '../queries/getaUserById';
+import { editUserById } from '../queries/editUserById';
+import { editBusinesById } from '../queries/editBusinesById';
+import { getReviewsByUserId } from '../queries/getReviewsByUserId';
+import { deleteReviewById } from '../queries/deleteReviewById';
 
-exports.businesses = async (req, res) => {
+export async function businesses (req, res) {
   try {
     const { rows: allBusinesses } = await getAllBussiness();
 
@@ -20,27 +16,27 @@ exports.businesses = async (req, res) => {
       approved: item.approved
     }));
 
-    res.append("Access-Control-Expose-Headers", "Content-Range");
-    res.set("Content-Range", "businesses 0-24/100");
+    res.append('Access-Control-Expose-Headers', 'Content-Range');
+    res.set('Content-Range', 'businesses 0-24/100');
     res.json(normalizedAllBusinesses);
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-exports.users = async (req, res) => {
+export async function users (req, res) {
   try {
     const { rows: allUsers } = await getAllUsers();
 
-    res.append("Access-Control-Expose-Headers", "Content-Range");
-    res.set("Content-Range", "businesses 0-24/100");
+    res.append('Access-Control-Expose-Headers', 'Content-Range');
+    res.set('Content-Range', 'businesses 0-24/100');
     res.json(allUsers);
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-exports.usersId = async (req, res) => {
+export async function usersId (req, res) {
   const id = req.params.id;
   try {
     const { rows: user } = await getaUserById(id);
@@ -48,9 +44,9 @@ exports.usersId = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-exports.editUserById = async (req, res) => {
+const _editUserById = async (req, res) => {
   const data = req.body;
   try {
     await editUserById(data);
@@ -59,28 +55,30 @@ exports.editUserById = async (req, res) => {
     console.log(error);
   }
 };
+export { _editUserById as editUserById };
 
-exports.getUserById = async (req, res) => {
+export async function getUserById (req, res) {
   try {
     const result = await getaUserById(req.params.id);
     res.send(result.rows[0]);
   } catch (error) {
     console.log(error);
   }
-};
+}
 
-exports.getBusinesseById = async (req, res) => {
+export async function getBusinesseById (req, res) {
   try {
-    const result = await getAllFromBusinesse(req.params.id);
-    const { rows: subImages } = await getBusinesseImages(req.params.id);
-    result.rows[0].subImages = subImages;
-    res.send(result.rows[0]);
+    // change to Business model
+    // const result = await getAllFromBusinesse(req.params.id);
+    // const { rows: subImages } = await getBusinesseImages(req.params.id);
+    // result.rows[0].subImages = subImages;
+    // res.send(result.rows[0]);
   } catch (error) {
     console.log(error);
   }
-};
+}
 
-exports.editBusinesById = async (req, res) => {
+const _editBusinesById = async (req, res) => {
   const data = req.body;
   try {
     await editBusinesById({ ...data, id: req.params.id });
@@ -89,16 +87,16 @@ exports.editBusinesById = async (req, res) => {
     console.log(error);
   }
 };
+export { _editBusinesById as editBusinesById };
 
-exports.getReviewsByUserId = async (req, res) => {
+const _getReviewsByUserId = async (req, res) => {
   try {
     const { rows: reviews } = await getReviewsByUserId(req.params.id);
-
-    //change date format
+    // change date format
     Reviews = reviews.map(item => {
       return {
         ...item,
-        reviewdate: item.reviewdate.toISOString().split("T")[0]
+        reviewdate: item.reviewdate.toISOString().split('T')[0]
       };
     });
     res.json(Reviews);
@@ -106,8 +104,9 @@ exports.getReviewsByUserId = async (req, res) => {
     console.log(error);
   }
 };
+export { _getReviewsByUserId as getReviewsByUserId };
 
-exports.deleteReviewById = async (req, res) => {
+const _deleteReviewById = async (req, res) => {
   try {
     await deleteReviewById(req.params.id);
     res.send({ success: true });
@@ -115,3 +114,4 @@ exports.deleteReviewById = async (req, res) => {
     console.log(error);
   }
 };
+export { _deleteReviewById as deleteReviewById };

@@ -1,211 +1,140 @@
-const jwt = require("jsonwebtoken");
-const { calculatDestance } = require("../../helpers/calculatDestance");
-const { getBusinesses, topRating } = require("../queries/getBusinesses");
-const {
-  getBusinesseImages,
-  getBusinesseReviews,
-  getAllFromBusinesse,
-  getBusinesseAvgRating
-} = require("../queries/getBusinessesById");
-const { addNewReview } = require("../queries/addNewReview");
-const { findUser } = require("../queries/findUser");
-const { addNewUser } = require("../queries/addNewUser");
-const {
-  addNewBussines,
-  getId,
-  addImage
-} = require("../queries/addNewBusiness");
-const { bussinessList } = require("../queries/getAllBusinesses");
-const { getReviewByUser } = require("../queries/getReviewByUser");
-const { getaUserById } = require("../queries/getaUserById");
+import { sign } from 'jsonwebtoken';
+import { calculatDestance } from '../utils/calculatDestance';
 
-exports.businesses = async (req, res) => {
+import Business from '../queries/Business';
+import User from '../queries/User';
+import Review from '../queries/Review';
+
+export async function businesses (req, res) {
   const userLocation = req.body;
-  try {
-    const result = await getBusinesses();
-    const tops = await topRating();
-    const topsWithoutNullRating = tops.rows.filter(
-      ({ rating }) => rating !== null
-    );
-    // businessWithDestince include business with Cfrom user location
-    let businessWithDistance = [];
-    // this foreach creat arrays whitch business details include sortByDist
-    // calculatDestance is a function from geolib package that calculat distance between 2 points
-    result.rows.forEach(business => {
-      const { lat, lng } = business;
-      const businessLocation = { lat, lng };
-      const distance = calculatDestance(businessLocation, userLocation);
-      businessWithDistance = [
-        ...businessWithDistance,
-        { ...business, distance, image: business.primaryimage }
-      ];
-    });
-    // this function sorts business by distance from user location
-    const sortByDist = businessWithDistance.sort(
-      (a, b) => a.distance - b.distance
-    );
 
-    // this is the data that we return to the browser
-    // [topsWithoutNullRating] witch is the top 5 rating businnes
-    //  [sortByDist] : sortting business by distance from user location
+  try {
+    const result = await Business.getBusinessesWithRating();
+    const topRated = await Business.getTopRated();
+
+    // this will add the distance from the user location to the business
+    // and then sort by the closest
+    const closestBusinesses = result.map(business => {
+      const { lat, lng } = business;
+
+      const distance = calculatDestance({ lat, lng }, userLocation);
+
+      return { ...business, distance };
+    })
+      .sort((a, b) => a.distance - b.distance);
+
+    //  [topRated] witch is the top 5 rating businnes
+    //  [businesses] : sorted businesses by distance from user location
     res.status(200).json({
-      topRated: topsWithoutNullRating,
-      businesses: sortByDist
+      topRated,
+      businesses: closestBusinesses
     });
   } catch (err) {
-    console.log("Error on businesses", err);
+    console.log('Error on businesses', err);
   }
-};
+}
 
-exports.businessesId = async (req, res) => {
+export async function businessesId (req, res) {
   const id = req.params.id;
+
   try {
-    const { rows: allBusinessImages } = await getBusinesseImages(id);
-    let { rows: businessReviews } = await getBusinesseReviews(id);
-    const { rows: business } = await getAllFromBusinesse(id);
-    let { rows: businesseAvgRating } = await getBusinesseAvgRating(id);
+    const result = await Business.getBusinessById(id);
 
-    // sometimes businesseAvgRating is null , so we must check this option. if its not we concat it to the business info
-    // we want to avoid the case of 3.3333333 so we use Math.round to fix it .
-
-    businesseAvgRating = Math.round(businesseAvgRating[0].avg);
-    const businesseWithRate = {
-      ...business[0],
-      rating: businesseAvgRating === 0 ? null : businesseAvgRating
-    };
-
-    // to fix the date and concat the result to items
-    businessReviews = businessReviews.map(item => {
-      return {
-        ...item,
-        dateCreated: item.datecreated.toISOString().split("T")[0],
-        datecreated: undefined
-      };
-    });
-
-    // finally, this is the result that we return
     res.json({
-      primaryImage: business[0].primaryimage,
-      subImages: allBusinessImages.map(item => item.image_url),
-      details: businesseWithRate,
-      reviews: [businessReviews][0]
+      primaryImage: result.image,
+      subImages: result.images,
+      details: result,
+      reviews: result.reviews
     });
   } catch (err) {
     console.log(err);
   }
-};
+}
 
-exports.newBusiness = async (req, res) => {
+export async function newBusiness (req, res, next) {
   try {
-    const data = req.body;
-    await addNewBussines(data);
-    const { rows: id } = await getId();
-    const businessId = id[0].max;
-    data.subImgs.forEach(async img => {
-      await addImage(businessId, img);
-    });
+    await Business.create(req.body);
+
     res.status(200).send({
       success: true,
-      msg: "New Business added"
+      msg: 'New Business added'
     });
   } catch (err) {
-    console.log("added business", err);
-    res.status(500);
+    next(err);
   }
-};
+}
 
-exports.newReview = (req, res) => {
-  const data = req.body;
-  addNewReview(data)
-    .then(res.status(200).send("the data added successfully"))
-    .catch(err => console.log(err));
-};
-
-const googleFacebookHandle = async (user, res) => {
+export async function newReview (req, res, next) {
   try {
-    const { rows: currentUser } = await findUser(user.email);
+    await Review.addReview(req.body);
 
-    if (Object.keys(user).length > 0) {
-      if (Object.keys(currentUser).length > 0) {
-
-        // add id in the cookie 
-        res.cookie("access_token",
-          jwt.sign({ email: user.email }, process.env.JWT_SECRET), { maxAge: 1000 * 60 * 60, });
-
-        res.status(200).json({
-          success: true,
-          msg: "The user already exist"
-        });
-      } else {
-        await addNewUser(
-          user.name.split(" ")[0],
-          user.name.split(" ")[1],
-          user.email,
-          user.url
-        );
-
-        // add id in the cookie
-        res.cookie(
-          "access_token",
-          jwt.sign({ user: user.name }, process.env.JWT_SECRET),
-          { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }
-        );
-
-        res.status(200).json({
-          success: true,
-          msg: "New user created"
-        });
-      }
-    } else {
-      res.status(400).json({
-        success: false,
-        msg: "Error"
-      });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-exports.googleFacebook = async (req, res, next) => {
-  try {
-    await googleFacebookHandle(req.body, res);
+    res.status(200).send({
+      success: true,
+      msg: 'the data added successfully'
+    });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      msg: "Error"
-    });
+    next(error);
   }
-};
+}
 
-exports.businessesList = async (req, res) => {
+export async function oauthHandler (req, res, next) {
   try {
-    const { rows: busList } = await bussinessList(req.id);
-    res.send(busList);
+    const user = await User.findUser(req.body.email);
+
+    if (!user.length) {
+      // create the new user if it does not exist
+      const result = await User.addNewUser(
+        req.body.name.split(' ')[0],
+        req.body.name.split(' ').slice(1).join(' '),
+        req.body.email,
+        req.body.url
+      );
+
+      // if something goes wrong with the insertion send an error
+      if (!result) {
+        next(new Error('Something went wrong'));
+      }
+    }
+
+    // set the auth cookie
+    res.cookie('access_token',
+      sign({ email: req.body.email }, process.env.JWT_SECRET), { maxAge: 1000 * 60 * 60 });
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function businessesList (req, res, next) {
+  try {
+    const businessList = await User.bussinessList(req.user.id);
+
+    res.status(200).send(businessList);
   } catch (err) {
-    console.log(err);
+    next(err);
   }
-};
+}
 
-exports.getUserReviews = async (req, res) => {
+export async function getUserReviews (req, res) {
   try {
-    let { rows: user } = await getaUserById(req.id);
-    let { rows: reviews } = await getReviewByUser(req.id);
-    reviews = reviews.map(obj => {
-      return {
-        ...obj,
-        reviewdate: obj.reviewdate.toISOString().split("T")[0]
-      };
-    });
+    // User.getUserReviews missing some things
+    let reviews = await User.getUserReviews(req.user.id);
+
+    reviews = reviews.map(review => ({
+      ...review,
+      reviewdate: review.reviewdate.toISOString().split('T')[0]
+    }));
+
     res.json({
       userDetails: {
-        firstName: user[0].first_name,
-        lastName: user[0].last_name,
-        profilePic: user[0].profile_image
+        firstName: req.user.first_name,
+        lastName: req.user.last_name,
+        profilePic: req.user.profile_image
       },
-      reviews: reviews
+      reviews
     });
   } catch (err) {
     console.log(err);
   }
-};
+}

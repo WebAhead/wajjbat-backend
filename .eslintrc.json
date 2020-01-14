@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "commonjs": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "extends": [
     "standard"
@@ -17,14 +18,11 @@
   "rules": {
     "quotes": [
       "error",
-      "double"
+      "single"
     ],
     "semi": [
       2,
       "always"
-    ],
-    "padded-blocks": [
-      "disable"
     ]
   }
 }

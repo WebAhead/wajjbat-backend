@@ -1,23 +1,24 @@
-const aws = require("aws-sdk");
-const env = require("env2");
-env("./config.env");
-aws.config.region = "eu-central-1";
+import * as aws from 'aws-sdk';
+
+require('dotenv').config();
+
+aws.config.region = 'eu-central-1';
 const S3_BUCKET = process.env.S3_BUCKET;
 
-exports.s3Controller = (req, res) => {
+export const s3Controller = (req, res) => {
   const s3 = new aws.S3();
-  const fileName = req.query["file-name"];
-  const fileType = req.query["file-type"];
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
 
   const s3Params = {
     Bucket: S3_BUCKET,
     Key: fileName,
     Expires: 60,
     ContentType: fileType,
-    ACL: "public-read"
+    ACL: 'public-read'
   };
 
-  s3.getSignedUrl("putObject", s3Params, (err, data) => {
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
     if (err) {
       console.log(err);
       return res.end();

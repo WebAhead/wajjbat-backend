@@ -1,14 +1,15 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const apiRoutes = require("./routes/api");
-const adminRoutes = require("./routes/admin");
-const cookieParser = require("cookie-parser");
+
+import express from 'express';
+import { json } from 'body-parser';
+import cors from 'cors';
+import apiRoutes from './routes/api';
+import adminRoutes from './routes/admin';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(json());
 app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,
@@ -17,8 +18,8 @@ app.use(cors({
 
 // initialize passport
 
-app.use("/api", apiRoutes);
-app.use("/admin", adminRoutes);
+app.use('/api', apiRoutes);
+app.use('/admin', adminRoutes);
 
 const port = process.env.PORT || 8000;
 
