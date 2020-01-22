@@ -3,8 +3,8 @@ import User from '../queries/User';
 
 export default function (returnData = false) {
   return (req, res, next) => {
-    if (req.cookies.access_token) {
-      verify(req.cookies.access_token, process.env.JWT_SECRET, async (err, authData) => {
+    if (req.cookies.wajjbat_access_token) {
+      verify(req.cookies.wajjbat_access_token, process.env.JWT_SECRET, async (err, authData) => {
         try {
           if (err) {
             res.sendStatus(401);
