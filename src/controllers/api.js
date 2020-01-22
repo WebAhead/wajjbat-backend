@@ -98,7 +98,7 @@ export async function oauthHandler (req, res, next) {
     }
 
     // set the auth cookie
-    res.cookie('access_token',
+    res.cookie('wajjbat_access_token',
       sign({ email: req.body.email }, process.env.JWT_SECRET), { maxAge: 1000 * 60 * 60 });
 
     res.status(200).json({ success: true });
