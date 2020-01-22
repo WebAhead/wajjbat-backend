@@ -8,15 +8,17 @@ import {
   businessesList,
   getUserReviews
 } from '../controllers/api';
-import { verifyToken } from '../authMiddleware/verifyToken';
+import middleware from '../middleware';
 import { s3Controller } from '../controllers/s3Controller';
 
 const router = Router();
+const { verifyToken } = middleware;
+
 //  google & facebook oauth
 router.post('/oauth/google', oauthHandler);
 router.post('/oauth/facebook', oauthHandler);
 
-// retuen approved busssiness order it by location
+// return approved busssiness order it by location
 router.post('/businesses', businesses);
 
 // get bussinesses by id

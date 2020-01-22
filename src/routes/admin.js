@@ -1,6 +1,5 @@
-const express = require("express");
-const router = express.Router();
-const {
+import { Router } from 'express';
+import {
   businesses,
   users,
   editUserById,
@@ -9,19 +8,22 @@ const {
   editBusinesById,
   getReviewsByUserId,
   deleteReviewById
-} = require("../controllers/admin");
+} from '../controllers/admin';
 
-const { getUserReviews } = require("../controllers/api");
+import middleware from '../middleware';
 
-router.get("/businesses", businesses);
-router.get("/businesses/:id", getBusinesseById);
-router.put("/businesses/:id", editBusinesById);
+const router = Router();
+const { pagination } = middleware;
 
-router.put("/users/:id", editUserById);
-router.get("/users/:id", getUserById);
-router.get("/users", users);
-               
-router.get("/reviewsbyuserid/:id", getReviewsByUserId);
-router.get("/deletereviewbyid/:id", deleteReviewById);
-            
-module.exports = router;
+router.get('/businesses', pagination, businesses);
+router.get('/businesses/:id', getBusinesseById);
+router.put('/businesses/:id', editBusinesById);
+
+router.put('/users/:id', editUserById);
+router.get('/users/:id', getUserById);
+router.get('/users', pagination, users);
+
+router.get('/reviewsbyuserid/:id', getReviewsByUserId);
+router.get('/deletereviewbyid/:id', deleteReviewById);
+
+export default router;

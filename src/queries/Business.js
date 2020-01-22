@@ -1,6 +1,28 @@
 import db from '../database/db_connection';
 
 export default {
+  all: (offset = 0, limit = 0) => new Promise((resolve, reject) =>
+    db.query(`
+          SELECT *, count(*) OVER() AS rows_count FROM businesses
+          OFFSET $1
+          LIMIT $2`, [offset, limit])
+      .then(({ rows }) => resolve(rows))
+      .catch(reject)
+  ),
+  // add data here and then test
+  edit: (data) => new Promise((resolve, reject) => db.query(`
+      UPDATE businesses SET 
+      name=$1, phone=$2, email=$3,
+      description=$4, cuisine=$5, address=$6, 
+      lat=$7,lng=$8, business_type=$9, status=$10
+      WHERE id=$11`,
+  [data.name, data.phone, data.email, data.description, data.cuisine, data.address,
+    data.lat, data.lng, data.business_type, data.status, data.id])
+    .then(({ rows }) => resolve(rows))
+    .catch(reject)
+
+  ),
+
   // get all businesses with the average ratings from all reviews
   // POST /businesses
   getBusinessesWithRating: () => new Promise((resolve, reject) => db.query(
@@ -10,7 +32,7 @@ export default {
             business.cuisine,business.business_type AS type
           FROM businesses 
           business LEFT JOIN reviews ON reviews.business_id = business.id
-          WHERE approved='approved' 
+          WHERE status='approved' 
           GROUP BY business.id`
   )
     .then(({ rows }) => resolve(rows))
@@ -24,7 +46,7 @@ export default {
             business.id, business.primaryimage as image, business.name, ROUND(AVG(reviews.rating)) AS rating,
             business.description, business.cuisine, business.business_type AS type 
         FROM  businesses business LEFT JOIN reviews ON reviews.business_id = business.id 
-        WHERE approved='approved' 
+        WHERE status='approved' 
         GROUP BY business.id 
         ORDER BY avg(reviews.rating) desc 
         LIMIT 5`
@@ -42,7 +64,7 @@ export default {
           business.email, business.address
         FROM businesses 
         business LEFT JOIN reviews ON reviews.business_id = business.id
-        WHERE approved='approved' AND business.id=$1 
+        WHERE status='approved' AND business.id=$1 
         GROUP BY business.id`, [id]),
     db.query('SELECT image_url AS url FROM images WHERE business_id = $1', [id]),
     db.query(`SELECT 
@@ -59,11 +81,13 @@ export default {
         reviews: reviews.rows,
         images: images.rows
       };
+      console.log(1, resultBusiness);
       resolve(resultBusiness);
     })
     .catch(reject)),
+  // POST /new-businesses
   create: (data) => new Promise((resolve, reject) =>
-  //   add the new business into the database and retur the id
+  //   add the new business into the database and return the id
     db.query(
         `INSERT INTO businesses
          (
@@ -89,6 +113,11 @@ export default {
           )
         )
           .then(({ rows }) => resolve(true)))
+      .catch(reject)
+  ),
+  changeStatus: (status, id) => new Promise((resolve, reject) =>
+    db.query('UPDATE businesses SET status=$1 WHERE id=$2', [status, id])
+      .then(({ rows }) => resolve(rows))
       .catch(reject)
   )
 

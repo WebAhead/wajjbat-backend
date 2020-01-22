@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import apiRoutes from './routes/api';
 import adminRoutes from './routes/admin';
@@ -10,6 +10,8 @@ const app = express();
 
 app.use(cookieParser());
 app.use(json());
+app.use(urlencoded({ extended: false }));
+
 app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,

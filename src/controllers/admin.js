@@ -1,117 +1,107 @@
-import { getAllBussiness } from '../queries/getAllBusinesses';
-import { getAllUsers } from '../queries/getAllUsers';
+// import { deleteReviewById } from '../queries/deleteReviewById';
 
-import { getaUserById } from '../queries/getaUserById';
-import { editUserById } from '../queries/editUserById';
-import { editBusinesById } from '../queries/editBusinesById';
-import { getReviewsByUserId } from '../queries/getReviewsByUserId';
-import { deleteReviewById } from '../queries/deleteReviewById';
+import Business from '../queries/Business';
+import User from '../queries/User';
+import Review from '../queries/Review';
 
-export async function businesses (req, res) {
+export async function businesses (req, res, next) {
   try {
-    const { rows: allBusinesses } = await getAllBussiness();
+    // maxShow is how essentially how many rows to show
+    const { offset, limit, maxShow } = req.pagination;
 
-    const normalizedAllBusinesses = allBusinesses.map(item => ({
+    const businesses = await Business.all(offset, limit);
+
+    res.set('Content-Range', `businesses ${offset}-${maxShow}/${businesses[0].rows_count}`);
+    res.json(businesses);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function users (req, res, next) {
+  const { offset, limit, maxShow } = req.pagination;
+
+  try {
+    const users = await User.all(offset, limit);
+
+    res.set('Content-Range', `users ${offset}-${maxShow}/${users[0].rows_count}`);
+
+    res.json(users);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function editUserById (req, res, next) {
+  const { first_name, last_name, id } = req.body;
+
+  try {
+    await User.adminEdit({ first_name, last_name, id });
+
+    res.send({ success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export async function getUserById (req, res, next) {
+  try {
+    const user = await User.findById(req.params.id);
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getBusinesseById (req, res, next) {
+  try {
+    const business = await Business.getBusinessById(req.params.id);
+    console.log(business);
+
+    res.send(business);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function editBusinesById (req, res, next) {
+  const data = req.body;
+  try {
+    if (data.statusChange) {
+      await Business.changeStatus(data.status);
+    }
+
+    await Business.edit({ ...data, id: req.params.id });
+
+    res.send({ success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReviewsByUserId = async (req, res, next) => {
+  try {
+    const reviews = await Review.getByUserId(req.params.id);
+
+    const normalizedReviews = reviews.map(item => ({
       ...item,
-      approved: item.approved
+      reviewdate: item.created_at.toISOString().split('T')[0]
+
     }));
 
-    res.append('Access-Control-Expose-Headers', 'Content-Range');
-    res.set('Content-Range', 'businesses 0-24/100');
-    res.json(normalizedAllBusinesses);
-  } catch (err) {
-    console.log(err);
+    res.json(normalizedReviews);
+  } catch (error) {
+    next(error);
   }
-}
+};
 
-export async function users (req, res) {
+export const deleteReviewById = async (req, res, next) => {
   try {
-    const { rows: allUsers } = await getAllUsers();
+    await Review.delete(req.params.id);
 
-    res.append('Access-Control-Expose-Headers', 'Content-Range');
-    res.set('Content-Range', 'businesses 0-24/100');
-    res.json(allUsers);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-export async function usersId (req, res) {
-  const id = req.params.id;
-  try {
-    const { rows: user } = await getaUserById(id);
-    res.json(user);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-const _editUserById = async (req, res) => {
-  const data = req.body;
-  try {
-    await editUserById(data);
     res.send({ success: true });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
-export { _editUserById as editUserById };
-
-export async function getUserById (req, res) {
-  try {
-    const result = await getaUserById(req.params.id);
-    res.send(result.rows[0]);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function getBusinesseById (req, res) {
-  try {
-    // change to Business model
-    // const result = await getAllFromBusinesse(req.params.id);
-    // const { rows: subImages } = await getBusinesseImages(req.params.id);
-    // result.rows[0].subImages = subImages;
-    // res.send(result.rows[0]);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-const _editBusinesById = async (req, res) => {
-  const data = req.body;
-  try {
-    await editBusinesById({ ...data, id: req.params.id });
-    res.send({ success: true });
-  } catch (error) {
-    console.log(error);
-  }
-};
-export { _editBusinesById as editBusinesById };
-
-const _getReviewsByUserId = async (req, res) => {
-  try {
-    const { rows: reviews } = await getReviewsByUserId(req.params.id);
-    // change date format
-    Reviews = reviews.map(item => {
-      return {
-        ...item,
-        reviewdate: item.reviewdate.toISOString().split('T')[0]
-      };
-    });
-    res.json(Reviews);
-  } catch (error) {
-    console.log(error);
-  }
-};
-export { _getReviewsByUserId as getReviewsByUserId };
-
-const _deleteReviewById = async (req, res) => {
-  try {
-    await deleteReviewById(req.params.id);
-    res.send({ success: true });
-  } catch (error) {
-    console.log(error);
-  }
-};
-export { _deleteReviewById as deleteReviewById };

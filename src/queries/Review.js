@@ -9,6 +9,15 @@ export default {
       )
         .then(({ rows }) => resolve(true))
         .catch(reject)
-    )
+    ),
+  getByUserId: (id) => new Promise((resolve, reject) =>
+    db.query(`SELECT * FROM reviews
+    WHERE user_id = $1`, [id])
+      .then(({ rows }) => resolve(rows))
+      .catch(reject)
+  ),
+  delete: (id) => new Promise((resolve, reject) => db.query(
+    'DELETE FROM reviews where id=$1', [id]
+  ))
 
 };

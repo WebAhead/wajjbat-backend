@@ -1,7 +1,7 @@
 import { verify } from 'jsonwebtoken';
 import User from '../queries/User';
 
-export function verifyToken (returnData = false) {
+export default function (returnData = false) {
   return (req, res, next) => {
     if (req.cookies.access_token) {
       verify(req.cookies.access_token, process.env.JWT_SECRET, async (err, authData) => {
@@ -10,7 +10,7 @@ export function verifyToken (returnData = false) {
             res.sendStatus(401);
           }
 
-          const currentUser = await User.findUser(authData.email);
+          const currentUser = await User.findUserEmail(authData.email);
           if (currentUser.length === 1) {
             req.user = currentUser[0];
             return returnData ? res.send({ id: currentUser[0].id }) : next();

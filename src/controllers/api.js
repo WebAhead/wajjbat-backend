@@ -19,6 +19,7 @@ export async function businesses (req, res) {
 
       const distance = calculatDestance({ lat, lng }, userLocation);
 
+      console.log(business.name);
       return { ...business, distance };
     })
       .sort((a, b) => a.distance - b.distance);
@@ -79,7 +80,7 @@ export async function newReview (req, res, next) {
 
 export async function oauthHandler (req, res, next) {
   try {
-    const user = await User.findUser(req.body.email);
+    const user = await User.findUserEmail(req.body.email);
 
     if (!user.length) {
       // create the new user if it does not exist
