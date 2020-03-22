@@ -25,7 +25,7 @@ router.post('/businesses', businesses);
 router.get('/businesses/:id', businessesId);
 
 // add new businesse
-router.post('/new-businesses', newBusiness);
+router.post('/new-businesses', verifyToken(false), newBusiness);
 
 // add new review
 // changet the boolean here for an object

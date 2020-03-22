@@ -57,7 +57,6 @@ export async function getUserById (req, res, next) {
 export async function getBusinesseById (req, res, next) {
   try {
     const business = await Business.getBusinessById(req.params.id);
-    console.log(business);
 
     res.send(business);
   } catch (error) {

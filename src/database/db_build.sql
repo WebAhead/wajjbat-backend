@@ -117,7 +117,7 @@ VALUES
   (2, 1, 5, 'Come enjoy some dank vaping 420 blaze it'),
   (2, 1, 3, 'very good place'),
   (2, 1, 1, 'come here'),
-  (1, 1, 3, 'lovely boobs'),
+  (1, 1, 3, 'lovely apples'),
   (1, 3, 5, 'lovely place');
 
 COMMIT;

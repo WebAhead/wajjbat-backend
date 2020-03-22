@@ -19,7 +19,6 @@ export async function businesses (req, res) {
 
       const distance = calculatDestance({ lat, lng }, userLocation);
 
-      console.log(business.name);
       return { ...business, distance };
     })
       .sort((a, b) => a.distance - b.distance);
@@ -54,7 +53,8 @@ export async function businessesId (req, res) {
 
 export async function newBusiness (req, res, next) {
   try {
-    await Business.create(req.body);
+    const res = await Business.create(req.body);
+    console.log(res);
 
     res.status(200).send({
       success: true,

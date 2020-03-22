@@ -20,7 +20,6 @@ export default {
     data.lat, data.lng, data.business_type, data.status, data.id])
     .then(({ rows }) => resolve(rows))
     .catch(reject)
-
   ),
 
   // get all businesses with the average ratings from all reviews
@@ -81,7 +80,6 @@ export default {
         reviews: reviews.rows,
         images: images.rows
       };
-      console.log(1, resultBusiness);
       resolve(resultBusiness);
     })
     .catch(reject)),
