@@ -70,16 +70,16 @@ VALUES
   ('avi', 'cohen', 'avi@gmail.com', 'https://pbs.twimg.com/profile_images/760457059427053573/ihXPqYrW_400x400.jpg');
 
 INSERT INTO businesses
-  (user_id,name,primaryImage,description,cuisine,lat,lng,business_type,phone,address,email,parking,freeWifi,smokingArea)
+  (user_id,name,status,primaryImage,description,cuisine,lat,lng,business_type,phone,address,email,parking,freeWifi,smokingArea)
 VALUES
-  ( 1, 'Al Shawarma', 'https://www.ahstatic.com/photos/5555_rsr001_01_p_1024x768.jpg',
+  ( 1, 'Al Shawarma', 'approved', 'https://www.ahstatic.com/photos/5555_rsr001_01_p_1024x768.jpg',
     'The best shwarma wrapper in town, for shwarma lovers, amazing quality and people',
     'east food', 32.794044, 34.989571, 'resturant', '052386777', 'nazerth', 'alswarma@gmail.com',
     'true', 'true', 'true'),
-  (2, 'Jamies Flafel', 'https://webbox.imgix.net/images/kifsqlsyyrpwrthq/66a8ab43-857c-4d8f-96c0-3c348fa4c2ab.jpg?auto=format,compress&fit=crop&crop=entropy',
+  (2, 'Jamies Flafel', 'approved', 'https://webbox.imgix.net/images/kifsqlsyyrpwrthq/66a8ab43-857c-4d8f-96c0-3c348fa4c2ab.jpg?auto=format,compress&fit=crop&crop=entropy',
     'Enjoy your flafel in a fine dining senario, with the chef Jamie special spicy sauce',
     'jews food', 35.23242 , 34.989571, 'resturant', '0523334446', 'haifa', 'jamie@gmail.com', 'true', 'true', 'false'),
-  ( 1, 'Hosens Basta', 'https://lh3.googleusercontent.com/p/AF1QipMttB9sCFEAvWt8uI7Vu1djbMA_v7C0ltRVntaU=s1600-w1280-h1280',
+  ( 1, 'Hosens Basta', 'approved', 'https://lh3.googleusercontent.com/p/AF1QipMttB9sCFEAvWt8uI7Vu1djbMA_v7C0ltRVntaU=s1600-w1280-h1280',
     'small weird cafe along the road, come here to enjoy the view. and Hosen speaking english.',
     'Cafe', 37.794044, 37.989571, 'resturant', '052386777', 'nazerth', 'alswarma@gmail.com',
     'true', 'true', 'false');
