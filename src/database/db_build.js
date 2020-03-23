@@ -1,17 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-const dbConnection = require('./db_connection.js');
+import pool from './db_connection.js';
 
-const sqlPath = path.join(__dirname, 'db_build.sql');
-const sql = fs.readFileSync(sqlPath).toString();
+const sqlPath = join(__dirname, 'db_build.sql');
+const sql = readFileSync(sqlPath).toString();
 
-dbConnection.query(sql, (err, result) => {
+pool.query(sql, (err, result) => {
   if (err) {
     console.log(err, 'error');
   } else {
     console.log('database created');
-    dbConnection.end(() => {
+    pool.end(() => {
       console.log('connection closed');
     });
   }
