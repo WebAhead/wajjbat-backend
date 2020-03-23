@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/run-server.js",
-    "dev": "nodemon src/run-server.js"
+    "dev": "nodemon src/run-server.js",
+    "build:db": "node src/database/run-es6.js"
   },
   "repository": {
     "type": "git",

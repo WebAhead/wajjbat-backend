@@ -2,80 +2,63 @@ BEGIN;
   DROP TABLE IF EXISTS businesses,users,images,reviews
   CASCADE;
 
-CREATE TABLE
-IF NOT EXISTS users
+CREATE TABLE IF NOT EXISTS users
 (
   id SERIAL PRIMARY KEY,
-  first_name VARCHAR
-(100) NOT NULL,
-  last_name VARCHAR
-(100) NOT NULL,
-  email  VARCHAR
-(100) UNIQUE,
-  profile_image TEXT 
+  first_name VARCHAR (100) NOT NULL,
+  last_name VARCHAR (100) NOT NULL,
+  email  VARCHAR (100) UNIQUE,
+  profile_image TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TABLE
-IF NOT EXISTS  businesses
+CREATE TABLE IF NOT EXISTS  businesses
 (
   id serial PRIMARY KEY,
   user_id INTEGER ,
   status VARCHAR(500) DEFAULT 'pending' NOT NULL,
   name VARCHAR(500) NOT NULL,
   primaryImage VARCHAR(500) NOT NULL,
-   description TEXT NOT NULL,
-  cuisine VARCHAR
-(100)  NULL,
-  lat DECIMAL
-(10,7) NOT NULL,
-  lng DECIMAL
-(10,7) NOT NULL,
-  business_type VARCHAR
-(100) NOT NULL,
-  phone VARCHAR
-(50) NOT NULL,
-  address VARCHAR
-(100) NOT NULL,
-  email VARCHAR
-(100) ,
+  description TEXT NOT NULL,
+  cuisine VARCHAR (100)  NULL,
+  lat DECIMAL (10,7) NOT NULL,
+  lng DECIMAL (10,7) NOT NULL,
+  business_type VARCHAR (100) NOT NULL,
+  phone VARCHAR (50) NOT NULL,
+  address VARCHAR (100) NOT NULL,
+  email VARCHAR(100),
   parking  BOOLEAN ,
   freeWifi  BOOLEAN ,
   smokingArea  BOOLEAN,
-  FOREIGN KEY
-(user_id)REFERENCES users
-(id)
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (user_id)REFERENCES users (id)
 );
 
 
-CREATE TABLE
-IF NOT EXISTS  images
+CREATE TABLE IF NOT EXISTS  images
 (
    id serial PRIMARY KEY,
    business_id INTEGER,
-   image_url VARCHAR
-(500) NOT NULL,
-   FOREIGN KEY
-(business_id) REFERENCES businesses
-(id)
-
+   image_url VARCHAR (500) NOT NULL,
+   created_at TIMESTAMP DEFAULT NOW(),
+   updated_at TIMESTAMP DEFAULT NOW(),
+   FOREIGN KEY (business_id) REFERENCES businesses (id)
 );
 
 
-CREATE TABLE
-IF NOT EXISTS  reviews
+CREATE TABLE IF NOT EXISTS  reviews
 (
   id serial PRIMARY KEY,
   user_id INTEGER ,
   business_id INTEGER ,   
   rating INTEGER NOT NULL,
   review_body TEXT NOT NULL,
-  date_created date default current_date,
-  FOREIGN KEY
-(user_id) REFERENCES users
-(id),
-  FOREIGN KEY
-(business_id)REFERENCES businesses
-(id)
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (business_id)REFERENCES businesses (id)
 );
 
 
