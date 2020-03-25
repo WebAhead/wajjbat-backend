@@ -27,7 +27,7 @@ export default {
   getBusinessesWithRating: () => new Promise((resolve, reject) => db.query(
           `SELECT 
             business.id, business.lat, business.lng, business.primaryimage AS image,
-            business.name, ROUND(AVG(reviews.rating)) AS rating, business.description,
+            business.name, ROUND(AVG(reviews.rating)) AS rating,COUNT(reviews.rating) AS reviews, business.description,
             business.cuisine,business.business_type AS type
           FROM businesses 
           business LEFT JOIN reviews ON reviews.business_id = business.id
@@ -68,6 +68,7 @@ export default {
     db.query('SELECT image_url AS url FROM images WHERE business_id = $1', [id]),
     db.query(`SELECT 
         reviews.rating, reviews.created_at, 
+        reviews.user_id,
         reviews.review_body, users.profile_image,
         CONCAT(users.first_name, ' ', users.last_name) AS fullname
         FROM reviews
