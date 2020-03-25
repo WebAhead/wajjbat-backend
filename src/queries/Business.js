@@ -69,6 +69,7 @@ export default {
     db.query(`SELECT 
         reviews.rating, reviews.created_at, 
         reviews.review_body, users.profile_image,
+        reviews.user_id AS reviewer_id,
         CONCAT(users.first_name, ' ', users.last_name) AS fullname
         FROM reviews
         LEFT JOIN users ON users.id = reviews.user_id 
