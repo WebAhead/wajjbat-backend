@@ -139,3 +139,23 @@ export async function getUserReviews (req, res) {
     console.log(err);
   }
 }
+
+export async function getReviewsByReviewrId (req, res) {
+  try {
+    const reviewer_id = req.params.reviewerid;
+    let reviews = await User.getUserReviews(reviewer_id);
+    const userDetails = await User.findById(reviewer_id);
+
+    reviews = reviews.map(review => ({
+      ...review,
+      reviewdate: review.reviewdate.toISOString().split('T')[0]
+    }));
+
+    res.json({
+      userDetails,
+      reviews
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}

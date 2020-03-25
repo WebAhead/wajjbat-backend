@@ -6,7 +6,8 @@ import {
   oauthHandler,
   newBusiness,
   businessesList,
-  getUserReviews
+  getUserReviews,
+  getReviewsByReviewrId
 } from '../controllers/api';
 import middleware from '../middleware';
 import { s3Controller } from '../controllers/s3Controller';
@@ -23,6 +24,9 @@ router.post('/businesses', businesses);
 
 // get bussinesses by id
 router.get('/businesses/:id', businessesId);
+
+// get reviews by reviewr id
+router.get('/reviewer/:fullname/:reviewerid', getReviewsByReviewrId);
 
 // add new businesse
 router.post('/new-businesses', verifyToken(false), newBusiness);
