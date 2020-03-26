@@ -53,8 +53,7 @@ export async function businessesId (req, res) {
 
 export async function newBusiness (req, res, next) {
   try {
-    const res = await Business.create(req.body);
-    console.log(res);
+    const response = await Business.create(req.body);
 
     res.status(200).send({
       success: true,
