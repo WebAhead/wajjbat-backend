@@ -94,9 +94,10 @@ export default {
         `INSERT INTO businesses
          (
             user_id, name, primaryImage, description, cuisine,
-            lat, lng, business_type, phone, address, email, parking, freeWifi, smokingArea
+            lat, lng, business_type, phone, address, email,
+            parking, freeWifi, smokingArea, status
         )
-          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,'approved')
           RETURNING id`,
         [
           data.userId, data.name, data.primaryImage, data.description,
