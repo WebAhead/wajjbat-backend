@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS  reviews
   FOREIGN KEY (business_id)REFERENCES businesses (id)
 );
 
-CREATE TABLE IF NOT EXISTS fans
+CREATE TABLE IF NOT EXISTS usersfollowbusinesses
 (
   id serial PRIMARY KEY,
   user_id INTEGER ,
@@ -112,7 +112,7 @@ VALUES
   (1, 1, 3, 'lovely apples'),
   (1, 3, 5, 'lovely place');
 
-INSERT INTO fans
+INSERT INTO usersfollowbusinesses
   (user_id,business_id)
 VALUES
   (12, 1),(12, 26),(12, 27),(4, 3),(4, 2),(4, 28),
