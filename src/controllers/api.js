@@ -4,6 +4,7 @@ import { calculatDestance } from '../utils/calculatDestance';
 import Business from '../queries/Business';
 import User from '../queries/User';
 import Review from '../queries/Review';
+import UsersFollowBusinesses from '../queries/UsersFollowBusinesses';
 
 export async function businesses (req, res) {
   const userLocation = req.body;
@@ -133,6 +134,31 @@ export async function getUserReviews (req, res) {
         profilePic: req.user.profile_image
       },
       reviews
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getFollowingByUserId (req, res) {
+  try {
+    // UsersFollowBusinesses.getFollowingByUserId
+    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid);
+    console.log(following);
+    res.json({
+      following
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getBusinessFollowers (req, res) {
+  try {
+    // UsersFollowBusinesses.getFollowersByBusinessId
+    const followers = await UsersFollowBusinesses.getFollowersByBusinessId(req.params.businessid);
+    res.json({
+      followers
     });
   } catch (err) {
     console.log(err);

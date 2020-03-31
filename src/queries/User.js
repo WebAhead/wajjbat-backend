@@ -14,10 +14,18 @@ export default {
   ).then(({ rows }) => resolve(rows))
     .catch(reject)),
 
-  findById: (id) => new Promise((resolve, reject) => db.query(
-    'SELECT * FROM users WHERE id=$1', [id]
-  )
-    .then(({ rows }) => resolve(rows[0]))
+  findById: (id) => new Promise((resolve, reject) => Promise.all([
+    db.query(`SELECT * FROM users WHERE id=$1`, [id]),
+    db.query(`SELECT COUNT(*) FROM usersfollowbusinesses
+        WHERE user_id = $1`, [id])
+  ])
+    .then(([user, count]) => {
+      const resultUser = {
+        ...user.rows,
+        following: count.rows[0]
+      };
+      resolve(resultUser);
+    })
     .catch(reject)),
 
   findUserEmail: (email) => new Promise((resolve, reject) => db.query(
@@ -33,6 +41,7 @@ export default {
       [firstName, lastName, email, profilePic])
       .then(({ rows }) => resolve(true))
       .catch(reject)),
+
   getUserReviews: (id) => new Promise((resolve, reject) =>
     db.query(
       `SELECT reviews.created_at as reviewDate, reviews.review_body AS reviewBody,

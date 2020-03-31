@@ -73,13 +73,16 @@ export default {
         CONCAT(users.first_name, ' ', users.last_name) AS fullname
         FROM reviews
         LEFT JOIN users ON users.id = reviews.user_id 
+        WHERE business_id = $1`, [id]),
+    db.query(`SELECT COUNT(*) FROM usersfollowbusinesses
         WHERE business_id = $1`, [id])
   ])
-    .then(([business, images, reviews]) => {
+    .then(([business, images, reviews, count]) => {
       const resultBusiness = {
         ...business.rows[0],
         reviews: reviews.rows,
-        images: images.rows
+        images: images.rows,
+        followers: count.rows[0]
       };
       resolve(resultBusiness);
     })
