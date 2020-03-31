@@ -46,7 +46,7 @@ export default {
   ),
   bussinessList: (id) => new Promise((resolve, reject) =>
     db.query(
-    `SELECT business.name, business.status, business.primaryimage as image, business.description,
+    `SELECT business.id, business.name, business.status, business.primaryimage as image, business.description,
      business.cuisine, business.business_type as type 
      FROM businesses 
      business LEFT JOIN users ON users.id = business.user_id 
