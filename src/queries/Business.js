@@ -54,8 +54,6 @@ export default {
     .catch(reject)),
 
   // GET /businesses/:id
-  // Edit by Najwan : for now removed the approved status check 
-  // WHERE status='approved' AND business.id=$1  ==> WHERE business.id=$1 
   getBusinessById: (id) => new Promise((resolve, reject) => Promise.all([
     db.query(
         `SELECT 
@@ -65,7 +63,7 @@ export default {
           business.email, business.address
         FROM businesses 
         business LEFT JOIN reviews ON reviews.business_id = business.id
-        WHERE business.id=$1 
+        WHERE status='approved' AND business.id=$1 
         GROUP BY business.id`, [id]),
     db.query('SELECT image_url AS url FROM images WHERE business_id = $1', [id]),
     db.query(`SELECT 
@@ -93,9 +91,10 @@ export default {
         `INSERT INTO businesses
          (
             user_id, name, primaryImage, description, cuisine,
-            lat, lng, business_type, phone, address, email, parking, freeWifi, smokingArea
+            lat, lng, business_type, phone, address, email,
+            parking, freeWifi, smokingArea, status
         )
-          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,'approved')
           RETURNING id`,
         [
           data.userId, data.name, data.primaryImage, data.description,
