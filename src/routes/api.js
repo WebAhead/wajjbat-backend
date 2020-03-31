@@ -7,7 +7,9 @@ import {
   newBusiness,
   businessesList,
   getUserReviews,
-  getReviewsByReviewrId
+  getReviewsByReviewrId,
+  getBusinessFollowers,
+  getFollowingByUserId
 } from '../controllers/api';
 import middleware from '../middleware';
 import { s3Controller } from '../controllers/s3Controller';
@@ -27,6 +29,12 @@ router.get('/businesses/:id', businessesId);
 
 // get reviews by reviewr id
 router.get('/reviewer/:fullname/:reviewerid', getReviewsByReviewrId);
+
+// get following by user id
+router.get('/following/:userid', getFollowingByUserId);
+
+// get followers by business id
+router.get('/followers/:businessid', getBusinessFollowers);
 
 // add new businesse
 router.post('/new-businesses', verifyToken(false), newBusiness);
