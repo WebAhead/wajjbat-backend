@@ -112,12 +112,4 @@ VALUES
   (1, 1, 3, 'lovely apples'),
   (1, 3, 5, 'lovely place');
 
-INSERT INTO usersfollowbusinesses
-  (user_id,business_id)
-VALUES
-  (12, 1),(12, 26),(12, 27),(4, 3),(4, 2),(4, 28),
-  (7, 1),(7, 26),(7, 28),(8, 3),(8, 2),(8, 28),
-  (9, 26),(9, 28),(9, 27),(9, 3), (13, 1),(13, 2),
-  (13, 3),(13, 26),(13, 27);
-
 COMMIT;
