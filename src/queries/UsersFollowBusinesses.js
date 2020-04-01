@@ -1,11 +1,11 @@
 import db from '../database/db_connection';
 
 export default {
-  addFollow: ({ userId, businessId, dateCreated }) =>
+  addFollow: ({ userId, businessId }) =>
     new Promise((resolve, reject) =>
       db.query(`
-        INSERT INTO usersfollowbusinesses (user_id, business_id, created_at) 
-        VALUES($1, $2, $3)`, [userId, businessId, dateCreated]
+        INSERT INTO usersfollowbusinesses (user_id, business_id) 
+        VALUES($1, $2)`, [userId, businessId]
       )
         .then(({ rows }) => resolve(true))
         .catch(reject)
@@ -22,7 +22,8 @@ export default {
       .then(({ rows }) => resolve(rows))
       .catch(reject)
   ),
-  deleteFollow: (id) => new Promise((resolve, reject) => db.query(
-    'DELETE FROM usersfollowbusinesses where id=$1', [id]
-  ))
+  deleteFollow: ({ userId, businessId }) => new Promise((resolve, reject) => db.query(
+    'DELETE FROM usersfollowbusinesses where user_id=$1 AND business_id=$2', [userId, businessId])
+    .then(({ rows }) => resolve(rows))
+    .catch(reject))
 };
