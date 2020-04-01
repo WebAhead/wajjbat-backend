@@ -65,6 +65,30 @@ export async function newBusiness (req, res, next) {
   }
 }
 
+export async function followBusiness (req, res, next) {
+  try {
+    const response = await UsersFollowBusinesses.addFollow(req.body);
+    res.status(200).send({
+      success: true,
+      msg: 'Started Following'
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function deleteFollowBusiness (req, res, next) {
+  try {
+    const response = await UsersFollowBusinesses.deleteFollow(req.body);
+    res.status(200).send({
+      success: true,
+      msg: 'Unfollowed'
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function newReview (req, res, next) {
   try {
     await Review.addReview(req.body);
@@ -143,8 +167,7 @@ export async function getUserReviews (req, res) {
 export async function getFollowingByUserId (req, res) {
   try {
     // UsersFollowBusinesses.getFollowingByUserId
-    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid);
-    console.log(following);
+    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid)
     res.json({
       following
     });
