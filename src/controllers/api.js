@@ -143,8 +143,7 @@ export async function getUserReviews (req, res) {
 export async function getFollowingByUserId (req, res) {
   try {
     // UsersFollowBusinesses.getFollowingByUserId
-    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid);
-    console.log(following);
+    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid)
     res.json({
       following
     });
