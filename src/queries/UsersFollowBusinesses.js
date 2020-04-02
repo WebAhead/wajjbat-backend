@@ -10,6 +10,13 @@ export default {
         .then(({ rows }) => resolve(true))
         .catch(reject)
     ),
+  isFollowing: ({ userId, businessId }) =>
+    new Promise((resolve, reject) =>
+      db.query(`SELECT * FROM usersfollowbusinesses WHERE user_id=$1 AND business_id=$2;`, [userId, businessId]
+      )
+        .then(({ rowCount }) => resolve(rowCount))
+        .catch(reject)
+    ),
   getFollowingByUserId: (uid) => new Promise((resolve, reject) =>
     db.query(`SELECT * FROM usersfollowbusinesses
     LEFT JOIN businesses ON usersfollowbusinesses.business_id = businesses.id WHERE usersfollowbusinesses.user_id = $1;`, [uid])
