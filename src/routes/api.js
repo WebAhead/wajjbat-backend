@@ -5,6 +5,7 @@ import {
   newReview,
   oauthHandler,
   newBusiness,
+  isFollowing,
   followBusiness,
   deleteFollowBusiness,
   businessesList,
@@ -41,10 +42,12 @@ router.get('/followers/:businessid', getBusinessFollowers);
 // add new businesse
 router.post('/new-businesses', verifyToken(false), newBusiness);
 
+router.post('/isfollowing', isFollowing);
+
 // start follow business
 router.post('/follow', followBusiness);
 
-// start follow business
+// stop follow business
 router.post('/unfollow', deleteFollowBusiness);
 
 // add new review
