@@ -11,7 +11,8 @@ import {
   getUserReviews,
   getReviewsByReviewrId,
   getBusinessFollowers,
-  getFollowingByUserId
+  getFollowingByUserId,
+  logout
 } from '../controllers/api';
 import middleware from '../middleware';
 import { s3Controller } from '../controllers/s3Controller';
@@ -57,6 +58,7 @@ router.get('/business-list', verifyToken(false), businessesList);
 router.get('/getUserReviews', verifyToken(false), getUserReviews);
 
 router.get('/isLoggedIn', verifyToken(true));
+router.get('/logout', logout);
 
 // router that handel aw3 requests
 router.get('/sign-s3', s3Controller);
