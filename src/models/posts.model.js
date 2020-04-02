@@ -34,7 +34,7 @@ const NewPostSchema = new Schema({
     type: String,
     enum: foodTags
   }],
-  user_id: Number
+  user_id: [{ type: Schema.Types.ObjectId, ref: 'usersschemas' }]
 });
 
 module.exports = mongoose.model('postsschemas', NewPostSchema);
