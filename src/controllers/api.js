@@ -185,7 +185,7 @@ export async function getUserReviews (req, res) {
 export async function getFollowingByUserId (req, res) {
   try {
     // UsersFollowBusinesses.getFollowingByUserId
-    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid)
+    const following = await UsersFollowBusinesses.getFollowingByUserId(req.params.userid);
     res.json({
       following
     });
@@ -198,6 +198,7 @@ export async function getBusinessFollowers (req, res) {
   try {
     // UsersFollowBusinesses.getFollowersByBusinessId
     const followers = await UsersFollowBusinesses.getFollowersByBusinessId(req.params.businessid);
+
     res.json({
       followers
     });
@@ -224,4 +225,12 @@ export async function getReviewsByReviewrId (req, res) {
   } catch (err) {
     console.log(err);
   }
+}
+
+export async function logout (req, res) {
+  res.clearCookie();
+
+  res.json({
+    status: true
+  });
 }
