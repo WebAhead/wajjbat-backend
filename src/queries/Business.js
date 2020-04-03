@@ -10,14 +10,15 @@ export default {
       .catch(reject)
   ),
   // add data here and then test
-  edit: (data) => new Promise((resolve, reject) => db.query(`
+  edit: (data) =>new Promise((resolve, reject) => db.query(`
       UPDATE businesses SET 
       name=$1, phone=$2, email=$3,
       description=$4, cuisine=$5, address=$6, 
-      lat=$7,lng=$8, business_type=$9, status=$10
-      WHERE id=$11`,
+      lat=$7,lng=$8, business_type=$9,
+      freewifi=$10, smokingarea=$11, parking=$12
+      WHERE id=$13 AND user_id=$14`,
   [data.name, data.phone, data.email, data.description, data.cuisine, data.address,
-    data.lat, data.lng, data.business_type, data.status, data.id])
+    data.lat, data.lng, data.type,data.freeWifi, data.smokingArea, data.parking, data.id, data.userId])
     .then(({ rows }) => resolve(rows))
     .catch(reject)
   ),
