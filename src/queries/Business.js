@@ -60,7 +60,7 @@ export default {
           business.id, business.lat, business.lng, business.primaryimage AS image,
           business.name, ROUND(AVG(reviews.rating)) AS rating, business.description,
           business.cuisine,business.business_type AS type, business.phone,
-          business.email, business.address
+          business.email, business.address, parking, freewifi, smokingarea
         FROM businesses 
         business LEFT JOIN reviews ON reviews.business_id = business.id
         WHERE status='approved' AND business.id=$1 
