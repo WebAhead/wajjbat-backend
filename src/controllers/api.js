@@ -65,6 +65,21 @@ export async function newBusiness (req, res, next) {
   }
 }
 
+export async function updateBusiness(req, res, next) {
+  try {
+    const response = await Business.edit(req.body);
+
+    res.status(200).send({
+      success:true,
+      msg: 'Business updated'
+    });
+
+  }catch(err){
+    next(err);
+  }
+  
+}
+
 export async function isFollowing (req, res, next) {
   try {
     const response = await UsersFollowBusinesses.isFollowing(req.body);
