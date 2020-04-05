@@ -6,6 +6,7 @@ import {
   oauthHandler,
   newBusiness,
   updateBusiness,
+  updatePicture,
   isFollowing,
   followBusiness,
   deleteFollowBusiness,
@@ -46,6 +47,9 @@ router.post('/new-businesses', verifyToken(false), newBusiness);
 
 // update an existing business
 router.post('/update-business',verifyToken(false),updateBusiness);
+
+// update picture
+router.post('/update-picture',verifyToken(false),updatePicture);
 
 router.post('/isfollowing', isFollowing);
 
