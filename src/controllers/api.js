@@ -80,7 +80,6 @@ export async function updateBusiness(req, res, next) {
   
 }
 export async function updatePicture(req, res, next) {
-  console.log('upadting picture:', req.body);
   const mode = req.body.active ? 'restorePicture' : 'removePicture'
   try {
     const response = await Business[mode](req.body);
