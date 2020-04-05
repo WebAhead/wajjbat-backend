@@ -243,7 +243,7 @@ export async function getReviewsByReviewrId (req, res) {
 }
 
 export async function logout (req, res) {
-  res.clearCookie();
+  res.clearCookie('wajjbat_access_token');
 
   res.json({
     status: true
