@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS  images
    id serial PRIMARY KEY,
    business_id INTEGER,
    image_url VARCHAR (500) NOT NULL,
+   active BOOLEAN DEFAULT TRUE,
    created_at TIMESTAMP DEFAULT NOW(),
    updated_at TIMESTAMP DEFAULT NOW(),
    FOREIGN KEY (business_id) REFERENCES businesses (id)

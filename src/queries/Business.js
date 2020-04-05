@@ -66,7 +66,7 @@ export default {
         business LEFT JOIN reviews ON reviews.business_id = business.id
         WHERE status='approved' AND business.id=$1 
         GROUP BY business.id`, [id]),
-    db.query('SELECT image_url AS url FROM images WHERE business_id = $1', [id]),
+    db.query('SELECT image_url AS url FROM images WHERE business_id = $1 AND active = TRUE', [id]),
     db.query(`SELECT 
         reviews.rating, reviews.created_at, 
         reviews.review_body, users.profile_image,
