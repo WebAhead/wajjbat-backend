@@ -17,7 +17,7 @@ socialController.addPost = (req, res) => {
     howtoprepare: req.body.howtoprepare,
     timetoprepare: req.body.timetoprepare,
     tags: req.body.tags,
-    user_id: mongoose.Types.ObjectId(req.body.user_id)
+    user_id: mongoose.Types.ObjectId(req.user.id)
   });
 
   myPosts
@@ -32,7 +32,7 @@ socialController.addPost = (req, res) => {
 
 socialController.favoritePosts = (req, res) => {
   const myFavoritePost = new FavoritePosts({
-    user_id: mongoose.Types.ObjectId(req.body.user_id),
+    user_id: mongoose.Types.ObjectId(req.user.id),
     post_id: mongoose.Types.ObjectId(req.body.post_id)
   });
 
@@ -48,7 +48,7 @@ socialController.favoritePosts = (req, res) => {
 
 socialController.followers = (req, res) => {
   const myFollowers = new Followers({
-    follower_id: mongoose.Types.ObjectId(req.body.follower_id),
+    follower_id: mongoose.Types.ObjectId(req.user.id),
     followed_id: mongoose.Types.ObjectId(req.body.followed_id)
   });
 
@@ -64,7 +64,7 @@ socialController.followers = (req, res) => {
 
 socialController.likes = (req, res) => {
   const myLikes = new Likes({
-    user_id: mongoose.Types.ObjectId(req.body.user_id),
+    user_id: mongoose.Types.ObjectId(req.user.id),
     post_id: mongoose.Types.ObjectId(req.body.post_id)
   });
 
@@ -80,7 +80,7 @@ socialController.likes = (req, res) => {
 
 socialController.comment = (req, res) => {
   const myComment = new Comment({
-    user_id: mongoose.Types.ObjectId(req.body.user_id),
+    user_id: mongoose.Types.ObjectId(req.user.id),
     post_id: mongoose.Types.ObjectId(req.body.post_id),
     comment: req.body.comment
   });
@@ -105,11 +105,11 @@ socialController.getAllPosts = (req, res) => {
 
 socialController.getNPosts = async (req, res) => {
   const usersPosts = await Posts.find({
-    user_id: { $ne: req.query.user_id }
+    user_id: { $ne: req.user.id }
   }).countDocuments();
   const n = Number(req.query.n);
   const display = n > usersPosts ? 0 : usersPosts - n;
-  Posts.find({ user_id: { $ne: req.query.user_id } })
+  Posts.find({ user_id: { $ne: req.user.id } })
     .skip(display)
     .exec((err, result) => {
       if (err) console.log(err);
@@ -119,7 +119,6 @@ socialController.getNPosts = async (req, res) => {
 };
 
 socialController.getComments = (req, res) => {
-  console.log(req.query);
   Comment.find({ post_id: req.query.post_id }, (err, result) => {
     if (err) console.log(err);
     console.log(result);
@@ -127,8 +126,18 @@ socialController.getComments = (req, res) => {
   });
 };
 
+socialController.getLatestComment = (req, res) => {
+  Comment.findOne({ post_id: req.query.post_id })
+    .sort({ created_at: -1 })
+    .exec((err, result) => {
+      if (err) console.log(err);
+      console.log(result);
+      res.send(result);
+    });
+};
+
 socialController.getAllUserPosts = (req, res) => {
-  Posts.find({ user_id: req.query.user_id }, (err, result) => {
+  Posts.find({ user_id: req.user.id }, (err, result) => {
     if (err) console.log(err);
     console.log(result);
     res.send(result);
@@ -136,7 +145,7 @@ socialController.getAllUserPosts = (req, res) => {
 };
 
 socialController.getAllUserFavorites = (req, res) => {
-  FavoritePosts.find({ user_id: req.query.user_id }, (err, result) => {
+  FavoritePosts.find({ user_id: req.user.id }, (err, result) => {
     if (err) console.log(err);
     console.log(result);
     res.send(result);
@@ -144,12 +153,13 @@ socialController.getAllUserFavorites = (req, res) => {
 };
 
 socialController.getFollowers = (req, res) => {
-  Followers.find({ follower_id: req.query.user_id }, (err, result) => {
+  Followers.find({ follower_id: req.user.id }, (err, result) => {
     if (err) console.log(err);
     console.log(result);
     res.send(result);
   });
 };
+
 socialController.getLikes = (req, res) => {
   Likes.find({ post_id: req.query.post_id })
     .countDocuments()
@@ -180,6 +190,7 @@ socialController.unLike = (req, res) => {
     res.send(result);
   });
 };
+
 socialController.unFollow = (req, res) => {
   Followers.findOneAndDelete({
     followed_id: req.body.user_id,
@@ -190,6 +201,7 @@ socialController.unFollow = (req, res) => {
     res.send(result);
   });
 };
+
 socialController.unFavorite = (req, res) => {
   FavoritePosts.findOneAndDelete({
     user_id: req.body.user_id,
