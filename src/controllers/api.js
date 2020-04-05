@@ -79,7 +79,22 @@ export async function updateBusiness(req, res, next) {
   }
   
 }
+export async function updatePicture(req, res, next) {
+  console.log('upadting picture:', req.body);
+  const mode = req.body.active ? 'restorePicture' : 'removePicture'
+  try {
+    const response = await Business[mode](req.body);
 
+    res.status(200).send({
+      success:true,
+      msg: mode.includes('restore') ? 'Picture restored' :  'Picture removed'
+    });
+
+  }catch(err){
+    next(err);
+  }
+  
+}
 export async function isFollowing (req, res, next) {
   try {
     const response = await UsersFollowBusinesses.isFollowing(req.body);
