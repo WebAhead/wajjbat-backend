@@ -24,7 +24,7 @@ export default {
       name=$1, phone=$2, email=$3,
       description=$4, cuisine=$5, address=$6, 
       lat=$7,lng=$8, business_type=$9,
-      freewifi=$10, smokingarea=$11, parking=$12
+      freewifi=$10, smokingarea=$11, parking=$12,primaryImage=$13
       WHERE id=$13 AND user_id=$14`,
           [
             data.name,
@@ -41,6 +41,7 @@ export default {
             data.parking,
             data.id,
             data.userId,
+            data.primaryImage,
           ],
         )
         .then(({ rows }) => Promise.all(
