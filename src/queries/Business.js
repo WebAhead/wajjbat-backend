@@ -22,10 +22,20 @@ export default {
     .then(({ rows }) => resolve(rows))
     .catch(reject)
   ),
+  // removes a picture by settings its active column to false
   removePicture: (data) =>new Promise((resolve, reject) => db.query(`
   UPDATE images SET 
   active=FALSE
   WHERE business_id=$1 AND image_url=$2`,
+[data.businessId,data.imageUrl])
+.then(({ rows }) => resolve(rows))
+.catch(reject)
+),
+// restore a picture by setting its active column to true
+restorePicture: (data) =>new Promise((resolve, reject) => db.query(`
+UPDATE images SET 
+active=TRUE
+WHERE business_id=$1 AND image_url=$2`,
 [data.businessId,data.imageUrl])
 .then(({ rows }) => resolve(rows))
 .catch(reject)
