@@ -22,6 +22,14 @@ export default {
     .then(({ rows }) => resolve(rows))
     .catch(reject)
   ),
+  removePicture: (data) =>new Promise((resolve, reject) => db.query(`
+  UPDATE images SET 
+  active=FALSE
+  WHERE business_id=$1 AND image_url=$2`,
+[data.businessId,data.imageUrl])
+.then(({ rows }) => resolve(rows))
+.catch(reject)
+),
 
   // get all businesses with the average ratings from all reviews
   // POST /businesses
