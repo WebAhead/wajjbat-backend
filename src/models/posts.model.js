@@ -34,7 +34,8 @@ const NewPostSchema = new Schema({
     type: String,
     enum: foodTags
   }],
-  user_id: [{ type: Schema.Types.ObjectId, ref: 'usersschemas' }]
+  user_id: [{ type: Schema.Types.ObjectId, ref: 'usersschemas' }],
+  created: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('postsschemas', NewPostSchema);
