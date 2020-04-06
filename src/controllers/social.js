@@ -1,11 +1,11 @@
 const socialController = (module.exports = {});
-const Posts = require("../models/posts.model");
-const FavoritePosts = require("../models/favorites.model");
-const Followers = require("../models/followers.model");
-const Likes = require("../models/likes.model");
-const Comment = require("../models/comment.models");
+const Posts = require('../models/posts.model');
+const FavoritePosts = require('../models/favorites.model');
+const Followers = require('../models/followers.model');
+const Likes = require('../models/likes.model');
+const Comment = require('../models/comment.models');
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 socialController.addPost = (req, res) => {
   const myPosts = new Posts({
@@ -105,11 +105,11 @@ socialController.getAllPosts = (req, res) => {
 
 socialController.getNPosts = async (req, res) => {
   const usersPosts = await Posts.find({
-    user_id: { $ne: req.user.id }
+    user_id: { $ne: mongoose.Types.ObjectId(req.user.id) }
   }).countDocuments();
   const n = Number(req.query.n);
   const display = n > usersPosts ? 0 : usersPosts - n;
-  Posts.find({ user_id: { $ne: req.user.id } })
+  Posts.find({ user_id: { $ne: mongoose.Types.ObjectId(req.user.id) } })
     .skip(display)
     .exec((err, result) => {
       if (err) console.log(err);
