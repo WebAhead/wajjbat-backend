@@ -27,10 +27,10 @@ CREATE TABLE IF NOT EXISTS  businesses
   business_type VARCHAR (100) NOT NULL,
   phone VARCHAR (50) NOT NULL,
   address VARCHAR (100) NOT NULL,
-  email VARCHAR(100),
-  parking  BOOLEAN ,
-  freeWifi  BOOLEAN ,
-  smokingArea  BOOLEAN,
+  email VARCHAR(100) NOT NULL,
+  parking  BOOLEAN DEFAULT FALSE NOT NULL,
+  freeWifi  BOOLEAN DEFAULT FALSE NOT NULL,
+  smokingArea  BOOLEAN DEFAULT FALSE NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (user_id)REFERENCES users (id)
@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS  images
    active BOOLEAN DEFAULT TRUE,
    created_at TIMESTAMP DEFAULT NOW(),
    updated_at TIMESTAMP DEFAULT NOW(),
-   FOREIGN KEY (business_id) REFERENCES businesses (id)
+   FOREIGN KEY (business_id) REFERENCES businesses (id),
+  UNIQUE (business_id,image_url)
 );
 
 
