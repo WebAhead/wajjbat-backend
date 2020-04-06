@@ -23,7 +23,9 @@ socialController.addPost = (req, res) => {
   myPosts
     .save()
     .then(result => {
-      console.log(result);
+      res.json({
+        status: true
+      });
     })
     .catch(err => {
       console.log(err);
@@ -39,7 +41,9 @@ socialController.favoritePosts = (req, res) => {
   myFavoritePost
     .save()
     .then(result => {
-      console.log(result);
+      res.json({
+        status: true
+      });
     })
     .catch(err => {
       console.log(err);
@@ -55,7 +59,9 @@ socialController.followers = (req, res) => {
   myFollowers
     .save()
     .then(result => {
-      console.log(result);
+      res.json({
+        status: true
+      });
     })
     .catch(err => {
       console.log(err);
@@ -71,7 +77,9 @@ socialController.likes = (req, res) => {
   myLikes
     .save()
     .then(result => {
-      console.log(result);
+      res.json({
+        status: true
+      });
     })
     .catch(err => {
       console.log(err);
@@ -88,7 +96,9 @@ socialController.comment = (req, res) => {
   myComment
     .save()
     .then(result => {
-      console.log(result);
+      res.json({
+        status: true
+      });
     })
     .catch(err => {
       console.log(err);
@@ -98,7 +108,7 @@ socialController.comment = (req, res) => {
 socialController.getAllPosts = (req, res) => {
   Posts.find((err, result) => {
     if (err) console.log(err);
-    console.log(result);
+
     res.send(result);
   });
 };
@@ -113,55 +123,67 @@ socialController.getNPosts = async (req, res) => {
     .skip(display)
     .exec((err, result) => {
       if (err) console.log(err);
-      console.log(result);
+
       res.send(result);
     });
 };
 
 socialController.getComments = (req, res) => {
-  Comment.find({ post_id: req.query.post_id }, (err, result) => {
-    if (err) console.log(err);
-    console.log(result);
-    res.send(result);
-  });
+  Comment.find(
+    { post_id: mongoose.Types.ObjectId(req.query.post_id) },
+    (err, result) => {
+      if (err) console.log(err);
+
+      res.send(result);
+    }
+  );
 };
 
 socialController.getLatestComment = (req, res) => {
-  Comment.findOne({ post_id: req.query.post_id })
+  Comment.findOne({ post_id: mongoose.Types.ObjectId(req.query.post_id) })
     .sort({ created_at: -1 })
     .exec((err, result) => {
       if (err) console.log(err);
-      console.log(result);
+
       res.send(result);
     });
 };
 
 socialController.getAllUserPosts = (req, res) => {
-  Posts.find({ user_id: req.user.id }, (err, result) => {
-    if (err) console.log(err);
-    console.log(result);
-    res.send(result);
-  });
+  Posts.find(
+    { user_id: mongoose.Types.ObjectId(req.user.id) },
+    (err, result) => {
+      if (err) console.log(err);
+      console.log(result);
+      res.send(result);
+    }
+  );
 };
 
 socialController.getAllUserFavorites = (req, res) => {
-  FavoritePosts.find({ user_id: req.user.id }, (err, result) => {
-    if (err) console.log(err);
-    console.log(result);
-    res.send(result);
-  });
+  FavoritePosts.find(
+    { user_id: mongoose.Types.ObjectId(req.user.id) },
+    (err, result) => {
+      if (err) console.log(err);
+      console.log(result);
+      res.send(result);
+    }
+  );
 };
 
 socialController.getFollowers = (req, res) => {
-  Followers.find({ follower_id: req.user.id }, (err, result) => {
-    if (err) console.log(err);
-    console.log(result);
-    res.send(result);
-  });
+  Followers.find(
+    { follower_id: mongoose.Types.ObjectId(req.user.id) },
+    (err, result) => {
+      if (err) console.log(err);
+      console.log(result);
+      res.send(result);
+    }
+  );
 };
 
 socialController.getLikes = (req, res) => {
-  Likes.find({ post_id: req.query.post_id })
+  Likes.find({ post_id: mongoose.Types.ObjectId(req.query.post_id) })
     .countDocuments()
     .exec((err, result) => {
       if (err) console.log(err);
@@ -172,7 +194,7 @@ socialController.getLikes = (req, res) => {
 
 socialController.deletePost = (req, res) => {
   Posts.findOneAndDelete({
-    _id: req.body.post_id
+    _id: mongoose.Types.ObjectId(req.body.post_id)
   }).exec((err, result) => {
     if (err) console.log(err);
     console.log(result);
@@ -182,8 +204,8 @@ socialController.deletePost = (req, res) => {
 
 socialController.unLike = (req, res) => {
   Likes.findOneAndDelete({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id
+    user_id: mongoose.Types.ObjectId(req.body.user_id),
+    post_id: mongoose.Types.ObjectId(req.body.post_id)
   }).exec((err, result) => {
     if (err) console.log(err);
     console.log(result);
@@ -193,8 +215,8 @@ socialController.unLike = (req, res) => {
 
 socialController.unFollow = (req, res) => {
   Followers.findOneAndDelete({
-    followed_id: req.body.user_id,
-    follower_id: req.body.follower_id
+    followed_id: mongoose.Types.ObjectId(req.body.user_id),
+    follower_id: mongoose.Types.ObjectId(req.body.follower_id)
   }).exec((err, result) => {
     if (err) console.log(err);
     console.log(result);
@@ -204,8 +226,8 @@ socialController.unFollow = (req, res) => {
 
 socialController.unFavorite = (req, res) => {
   FavoritePosts.findOneAndDelete({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id
+    user_id: mongoose.Types.ObjectId(req.body.user_id),
+    post_id: mongoose.Types.ObjectId(req.body.post_id)
   }).exec((err, result) => {
     if (err) console.log(err);
     console.log(result);
