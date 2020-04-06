@@ -26,8 +26,9 @@ export const s3Controller = (req, res) => {
 
     const returnData = {
       signedRequest: data,
-      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}-${Date.now()}`
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
     };
+
     res.write(JSON.stringify(returnData));
     res.end();
   });
