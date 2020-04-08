@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS  businesses
   smokingArea  BOOLEAN,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (user_id)REFERENCES users (id)
+  FOREIGN KEY (user_id)REFERENCES users (id),
+  clicks INTEGER DEFAULT 0
 );
 
 
