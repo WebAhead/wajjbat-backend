@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/run-server.js",
     "dev": "nodemon src/run-server.js",
-    "build:db": "node src/database/run-es6.js"
+    "build:db": "node src/database/run-es6.js",
+    "build:img": "docker build -f Dockerfile.dev -t gungnir/wajbat-backend .",
+    "start:img": "docker run --rm -d  -p 8000:8000/tcp gungnir/wajbat-backend:latest"
   },
   "repository": {
     "type": "git",
