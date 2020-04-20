@@ -3,6 +3,7 @@ import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import apiRoutes from './routes/api';
 import adminRoutes from './routes/admin';
+import paymentRoutes from './routes/payment';
 import cookieParser from 'cookie-parser';
 
 const mongoose = require('mongoose');
@@ -27,6 +28,7 @@ app.options('*', cors());
 app.use('/api', apiRoutes);
 app.use('/admin', adminRoutes);
 app.use('/social', social);
+app.use('/payment', paymentRoutes);
 
 // connect to database
 mongoose.connect(

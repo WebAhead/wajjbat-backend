@@ -9,7 +9,6 @@ import {
   getReviewsByUserId,
   deleteReviewById
 } from '../controllers/admin';
-
 import middleware from '../middleware';
 
 const router = Router();
